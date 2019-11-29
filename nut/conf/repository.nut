@@ -250,6 +250,7 @@ mcu_names = {
     "MCU_LPC1778",
     "MCU_MCF52259", 
     "MCU_MCF51CN128",
+    "MCU_MK64F",
     "MCU_ZERO"
 }
 

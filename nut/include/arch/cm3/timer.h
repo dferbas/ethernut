@@ -119,6 +119,10 @@
 
 #define NUT_HWCLK_PERIPHERAL NUT_HWCLK_PCLK
 
+#elif defined(MCU_MK64F)
+
+#define NUT_HWCLK_MAX 9 // BUS_CLK, SYS_CLK
+
 #else
 #warning "Unknown CM3 family"
 #endif

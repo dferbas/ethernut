@@ -55,6 +55,9 @@
 #elif defined(MCU_LPC176x) || defined(MCU_LPC177x_8x) || defined(MCU_LPC407x_8x)
 #include <arch/cm3/nxp/lpc17xx_irqreg.h>
 
+#elif defined(MCU_MK64F)
+#include <arch/cm3/nxp/mk64f_irqreg.h>
+
 #else
 #warning "Unknown CortexM3 MCU defined"
 #endif

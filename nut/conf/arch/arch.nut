@@ -2290,6 +2290,28 @@ nutarch =
                 },
                 makedefs = { "MCU=52259" }
             },
+            {
+                macro = "MCU_MK64F",
+                brief = "Freescale MK64F",
+                description = "To "..
+                              "Be "..
+                              "Defined.",
+                flavor = "boolean",
+                exclusivity = mcu_names,
+                file = "include/cfg/arch.h",
+                requires = { "TOOL_CC_CM3" },
+                provides = {
+                    "HW_TARGET",
+                    "HW_MCU_CM3",
+                    "HW_MCU_MK64F"
+                },
+                makedefs = { "FLASH0_LENGTH=1M",
+                             "RAM0_LENGTH=194K",
+                             "RAM1_LENGTH=64K",
+                             "FLEX_LENGTH=4K",
+                             "MCU=cortex-m4",
+                            },
+            },
 
             --
             -- Imaginary Zero CPU

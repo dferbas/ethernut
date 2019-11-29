@@ -55,6 +55,8 @@
 #elif defined(MCU_LPC407x_8x)
 #include <arch/cm3/nxp/lpc407x_8x.h>
 #include <arch/cm3/nxp/lpc407x_8x_clk.h>
+#elif defined(MCU_MK64F)
+#include <arch/cm3/nxp/mk64f_clk.h>
 #else
 #warning "Unknown CM3 family"
 #endif
@@ -106,6 +108,8 @@ uint32_t NutArchClockGet(int idx)
     clock = Stm32ClockGet(idx);
 #elif defined(MCU_LPC17xx)
     clock = Lpc17xx_ClockGet(idx);
+#elif defined(MCU_MK64F)
+    clock = MK64F_ClockGet(idx);
 #else
 #warning "Unknown CM3 family"
 #endif
