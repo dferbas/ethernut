@@ -238,6 +238,41 @@ nutarch_cm3 =
         requires = { "HW_MCU_LPC17xx" },
         description = "NXP LPC17xx Series",
         script = "arch/cm3/lpc17xxfam.nut"
+    },
+
+    --
+    -- Cortex Based Cpu Directory
+    --
+    {
+        name = "nutarch_cm3_mk64f_family",
+        brief = "MK64F Family",
+        requires = { "HW_MCU_MK64F" },
+        description = "NXP MK64F Series",
+--        script = "arch/cm3/mk64f.nut",
+        provides = {
+--            "HW_FLASH",
+--            "HW_FLASH_STM32",
+--            "DEV_RTC",
+--            "HW_STM32_BACKUP_REG",
+--            "DEV_CRC",
+--            "DEV_UART_SPECIFIC",
+        },
+        sources = {
+            "cm3/dev/nxp/mk64f_clk.c",
+            "cm3/dev/nxp/mk64f_irqreg.c",
+            "cm3/dev/nxp/system_mk64f.c",
+        },
+        options =
+        {
+            {
+                macro = "MCU_MK64F",
+                brief = "MK64F Family",
+                descrition ="MK64F Family.",
+                default = 1,
+                requires = { "HW_MCU_MK64F" },
+                file = "include/cfg/arch.h"
+            },
+        }
     }
 }
 

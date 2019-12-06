@@ -189,3 +189,5 @@ build
 /nut/tools/qnutdisc/src/qrc_mainwindow.cpp
 /nut/tools/qnutdisc/src/.deps
 /nut/tools/qnutdisc/src/Makefile
+/nutapp
+/nutbld
