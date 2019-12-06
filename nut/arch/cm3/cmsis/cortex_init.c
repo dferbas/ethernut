@@ -178,7 +178,9 @@ static __attribute__((section(".vtable")))
  * application.*/
 void (*volatile g_pfnRAMVectors[NUM_INTERRUPTS + 2])(void*);
 # else
-void (*volatile g_pfnRAMVectors[NUM_INTERRUPTS])(void*);
+#warning "A bug?"
+// void (*volatile g_pfnRAMVectors[NUM_INTERRUPTS])(void*);
+void (*volatile g_pfnRAMVectors[NUM_INTERRUPTS + 2])(void*);
 # endif
 #endif
 
