@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <arch/cm3/nxp/vendor/MK64F12.h>
 #include <arch/cm3/nxp/vendor/MK64F12_features.h>
 #include <arch/cm3/nxp/mk64f_clk.h>
@@ -88,12 +87,12 @@ static unsigned int CLOCK_GetMcgExtClkFreq(void)
 		{
 				case 0U:
 						/* Please call CLOCK_SetXtal0Freq base on board setting before using OSC0 clock. */
-						assert(g_xtal0Freq);
+						// assert(g_xtal0Freq);
 						freq = g_xtal0Freq;
 						break;
 				case 1U:
 						/* Please call CLOCK_SetXtal32Freq base on board setting before using XTAL32K/RTC_CLKIN clock. */
-						assert(g_xtal32Freq);
+						// assert(g_xtal32Freq);
 						freq = g_xtal32Freq;
 						break;
 				case 2U:
@@ -233,7 +232,7 @@ unsigned int CLOCK_GetPll0Freq(void)
 		 * Please call CLOCK_SetXtal0Freq base on board setting before using OSC0 clock.
 		 * Please call CLOCK_SetXtal1Freq base on board setting before using OSC1 clock.
 		 */
-		assert(mcgpll0clk);
+		// assert(mcgpll0clk);
 
 		mcgpll0clk /= (FSL_FEATURE_MCG_PLL_PRDIV_BASE + MCG_C5_PRDIV0_VAL);
 		mcgpll0clk *= (FSL_FEATURE_MCG_PLL_VDIV_BASE + MCG_C6_VDIV0_VAL);
@@ -298,7 +297,7 @@ unsigned int CLOCK_GetOsc0ErClkFreq(void)
 		if (OSC0->CR & OSC_CR_ERCLKEN_MASK)
 		{
 				/* Please call CLOCK_SetXtal0Freq base on board setting before using OSC0 clock. */
-				assert(g_xtal0Freq);
+				// assert(g_xtal0Freq);
 				return g_xtal0Freq;
 		}
 		else
@@ -318,7 +317,7 @@ unsigned int CLOCK_GetEr32kClkFreq(void)
 						break;
 				case 2U: /* RTC 32k clock  */
 						/* Please call CLOCK_SetXtal32Freq base on board setting before using XTAL32K/RTC_CLKIN clock. */
-						assert(g_xtal32Freq);
+						// assert(g_xtal32Freq);
 						freq = g_xtal32Freq;
 						break;
 				case 3U: /* LPO clock      */
@@ -490,7 +489,7 @@ int CLOCK_SetExternalRefClkConfig(mcg_oscsel_t oscsel)
 
 void CLOCK_EnablePll0(mcg_pll_config_t const *config)
 {
-    assert(config);
+    // assert(config);
 
     uint8_t mcg_c5 = 0U;
 
@@ -510,7 +509,7 @@ void CLOCK_EnablePll0(mcg_pll_config_t const *config)
 
 int CLOCK_SetPbeMode(mcg_pll_clk_select_t pllcs, mcg_pll_config_t const *config)
 {
-    assert(config);
+    // assert(config);
 
     /*
        This function is designed to change MCG to PBE mode from PEE/BLPE/FBE,
@@ -556,7 +555,7 @@ static void CLOCK_CONFIG_SetFllExtRefDiv(uint8_t frdiv)
 
 int CLOCK_BootToPeeMode(mcg_oscsel_t oscsel, mcg_pll_clk_select_t pllcs, mcg_pll_config_t const *config)
 {
-    assert(config);
+    // assert(config);
 
     CLOCK_SetExternalRefClkConfig(oscsel);
 
