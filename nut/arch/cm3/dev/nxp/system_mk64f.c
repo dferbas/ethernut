@@ -1,3 +1,23 @@
-#include <arch/cm3/nxp/system_mk64f.h>
+#include <arch/cm3/nxp/vendor/MK64F12.h>
 
+__attribute__ ((used,section(".FlashConfig"))) const struct {
+    unsigned int word1;
+    unsigned int word2;
+    unsigned int word3;
+    unsigned int word4;
+} Flash_Config = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFE};
 
+void SystemInit (void)
+{
+	/* WDOG->UNLOCK: WDOGUNLOCK=0xC520 */
+	WDOG->UNLOCK = WDOG_UNLOCK_WDOGUNLOCK(0xC520); /* Key 1 */
+	/* WDOG->UNLOCK: WDOGUNLOCK=0xD928 */
+	WDOG->UNLOCK = WDOG_UNLOCK_WDOGUNLOCK(0xD928); /* Key 2 */
+	/* WDOG->STCTRLH: ?=0,DISTESTWDOG=0,BYTESEL=0,TESTSEL=0,TESTWDOG=0,?=0,?=1,WAITEN=1,STOPEN=1,DBGEN=0,ALLOWUPDATE=1,WINEN=0,IRQRSTEN=0,CLKSRC=1,WDOGEN=0 */
+	WDOG->STCTRLH = WDOG_STCTRLH_BYTESEL(0x00)
+		| WDOG_STCTRLH_WAITEN_MASK
+		| WDOG_STCTRLH_STOPEN_MASK
+		| WDOG_STCTRLH_ALLOWUPDATE_MASK
+		| WDOG_STCTRLH_CLKSRC_MASK
+		| 0x0100U;
+}

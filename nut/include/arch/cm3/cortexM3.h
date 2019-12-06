@@ -56,7 +56,7 @@
 #elif defined(MCU_LPC407x_8x)
 #include <arch/cm3/nxp/lpc407x_8x.h>
 #elif defined(MCU_MK64F)
-#include <arch/cm3/nxp/MK64F12.h>
+#include <arch/cm3/nxp/vendor/MK64F12.h>
 #else
 #warning "Unknown CM3 family"
 #endif

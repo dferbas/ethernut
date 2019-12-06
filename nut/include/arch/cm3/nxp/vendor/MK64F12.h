@@ -263,7 +263,7 @@ typedef enum IRQn {
 #define __FPU_PRESENT                  1         /**< Defines if an FPU is present or not */
 
 #include "system_MK64F12.h"            /* Device specific configuration file */
-#include "../core_cm3.h"
+#include "../../core_cm3.h"
 
 /*!
  * @}
