@@ -42,6 +42,7 @@ pin_labels:
 
 #include <arch/cm3/nxp/vendor/fsl_common.h>
 #include <arch/cm3/nxp/vendor/fsl_port.h>
+#include <arch/cm3/nxp/vendor/fsl_sysmpu.h>
 #include <arch/cm3/nxp/vendor/fsl_gpio.h>
 #include <arch/cm3/board/sm3_mu.h>
 
@@ -53,7 +54,9 @@ pin_labels:
  * END ****************************************************************************************************************/
 void NutBoardInit(void)
 {
-    NutBoardInitPins();
+	NutBoardInitPins();
+
+	SYSMPU_Enable(SYSMPU, false);
 }
 
 /* clang-format off */

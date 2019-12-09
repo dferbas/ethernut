@@ -608,6 +608,7 @@
  * above.
  */
 #ifndef DEV_ETHER
+#warning "NULL ETHER"
 #include <dev/null_ether.h>
 #endif
 #ifndef DEV_ETHER_NAME

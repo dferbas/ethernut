@@ -255,15 +255,19 @@ nutarch_cm3 =
 --            "DEV_RTC",
 --            "HW_STM32_BACKUP_REG",
 --            "DEV_CRC",
---            "DEV_UART_SPECIFIC",
+            "DEV_UART",
+            "DEV_UART_SPECIFIC",
         },
         sources = {
             "cm3/dev/nxp/mk64f_clk.c",
             "cm3/dev/nxp/mk64f_irqreg.c",
             "cm3/dev/nxp/system_mk64f.c",
+            "cm3/dev/nxp/eth_mcux.c",
             "cm3/dev/nxp/vendor/fsl_clock.c",
             "cm3/dev/nxp/vendor/fsl_common.c",
             "cm3/dev/nxp/vendor/fsl_gpio.c",
+            "cm3/dev/nxp/vendor/fsl_enet.c",
+            "cm3/dev/nxp/vendor/fsl_phy.c",
         },
         options =
         {

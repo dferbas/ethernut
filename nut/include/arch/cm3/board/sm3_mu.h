@@ -6,6 +6,11 @@
 #ifndef _PIN_MUX_H_
 #define _PIN_MUX_H_
 
+
+#ifndef DEV_ETHER
+#include <dev/eth_mcux.h>
+#define DEV_ETHER devEthMcux
+#endif
 /*!
  * @addtogroup pin_mux
  * @{
