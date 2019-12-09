@@ -7,7 +7,7 @@ __attribute__ ((used,section(".FlashConfig"))) const struct {
     unsigned int word4;
 } Flash_Config = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFE};
 
-unsigned int SystemCoreClock = DEFAULT_SYSTEM_CLOCK;
+uint32_t SystemCoreClock = DEFAULT_SYSTEM_CLOCK;
 
 void SystemInit (void)
 {

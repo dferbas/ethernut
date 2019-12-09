@@ -126,7 +126,7 @@ extern "C" {
  * query the frequency of the debug timer or configure the trace clock speed
  * SystemCoreClock is initialized with a correct predefined value.
  */
-extern unsigned int SystemCoreClock;
+extern uint32_t SystemCoreClock;
 
 /**
  * @brief Setup the microcontroller system.

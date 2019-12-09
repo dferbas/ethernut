@@ -261,6 +261,9 @@ nutarch_cm3 =
             "cm3/dev/nxp/mk64f_clk.c",
             "cm3/dev/nxp/mk64f_irqreg.c",
             "cm3/dev/nxp/system_mk64f.c",
+            "cm3/dev/nxp/vendor/fsl_clock.c",
+            "cm3/dev/nxp/vendor/fsl_common.c",
+            "cm3/dev/nxp/vendor/fsl_gpio.c",
         },
         options =
         {
