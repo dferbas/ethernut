@@ -86,10 +86,10 @@
 #endif
 
 #define ETHMCUX_ENET ENET
-#define ETHMCUX_PHY 0x00U
+#define ETHMCUX_PHY 0x01U
 #define CORE_CLK_FREQ CLOCK_GetFreq(kCLOCK_CoreSysClk)
 #define ETHMCUX_RXBD_NUM (32)
-#define ETHMCUX_TXBD_NUM (32)
+#define ETHMCUX_TXBD_NUM (4)
 #define ETHMCUX_RXBUFF_SIZE (ENET_FRAME_MAX_FRAMELEN)
 #define ETHMCUX_TXBUFF_SIZE (ENET_FRAME_MAX_FRAMELEN)
 #define ETHMCUX_DATA_LENGTH (1000)
@@ -110,6 +110,8 @@ SDK_ALIGN(static uint8_t g_txDataBuff[ETHMCUX_TXBD_NUM][SDK_SIZEALIGN(ETHMCUX_TX
 static enet_handle_t g_handle;
 static uint32_t g_testTxNum = 0;
 static uint8_t g_macAddr[6] = {0xd4, 0xbe, 0xd9, 0x45, 0x22, 0x60};
+static uint8_t m_frame[ENET_FRAME_MAX_FRAMELEN];
+
 
 static unsigned int nic_phy_addr = NIC_PHY_ADDR;
  /*!
@@ -224,7 +226,26 @@ int EthMcuxOutput(NUTDEVICE * dev, NETBUF * nb)
 	int rc = -1;
 	// ETHMCUXINFO *ni = (ETHMCUXINFO *) dev->dev_dcb;
 	bool link = false;
+	unsigned int sz;
+	uint8_t *buf = m_frame;
 
+
+	if ((sz = nb->nb_nw.sz + nb->nb_tp.sz + nb->nb_ap.sz) > ETHERMTU) {
+		return -1;
+	}
+
+	sz += nb->nb_dl.sz;
+
+	memcpy(buf, nb->nb_dl.vp, nb->nb_dl.sz);
+	memcpy(&buf[6], g_macAddr, sizeof(g_macAddr));
+	buf += nb->nb_dl.sz;
+	memcpy(buf, nb->nb_nw.vp, nb->nb_nw.sz);
+	buf += nb->nb_nw.sz; 
+	memcpy(buf, nb->nb_tp.vp, nb->nb_tp.sz);
+	buf += nb->nb_tp.sz;
+	memcpy(buf, nb->nb_ap.vp, nb->nb_ap.sz);
+  m_frame[12] = (sz >> 8) & 0xFFU;
+  m_frame[13] = sz & 0xFFU;
 	/*
 	 * After initialization we are waiting for a long time to give
 	 * the PHY a chance to establish an Ethernet link.
@@ -234,7 +255,7 @@ int EthMcuxOutput(NUTDEVICE * dev, NETBUF * nb)
 		if (!PHY_GetLinkStatus(ETHMCUX_ENET, ETHMCUX_PHY, &link)) {
 			if (link) {
 				g_testTxNum++;
-				rc = ENET_SendFrame(ETHMCUX_ENET, &g_handle, nb->nb_dl.vp, nb->nb_dl.sz);
+				rc = ENET_SendFrame(ETHMCUX_ENET, &g_handle, m_frame, sz);
 				if (!rc)
 					break;
 			}
@@ -287,6 +308,9 @@ int EthMcuxInit(NUTDEVICE * dev)
 	 */
 	ENET_GetDefaultConfig(&config);
 	config.miiMode = kENET_MiiMode;
+	// config.interrupt |= kENET_RxFrameInterrupt;
+	// config.interrupt |= kENET_TxFrameInterrupt;
+	// config.interrupt |= kENET_MiiInterrupt;
 
 	/* Set SMI to get PHY link status. */
 	sysClock = CORE_CLK_FREQ;

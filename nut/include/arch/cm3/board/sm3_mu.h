@@ -3,9 +3,13 @@
  * will be overwritten if the respective MCUXpresso Config Tools is used to update this file.
  **********************************************************************************************************************/
 
-#ifndef _PIN_MUX_H_
-#define _PIN_MUX_H_
+#ifndef _BOARD_SM3_MU_H_
+#define _BOARD_SM3_MU_H_ 
 
+#include <arch/cm3/nxp/vendor/fsl_common.h>
+#include <arch/cm3/nxp/vendor/fsl_port.h>
+#include <arch/cm3/nxp/vendor/fsl_sysmpu.h>
+#include <arch/cm3/nxp/vendor/fsl_gpio.h>
 
 #ifndef DEV_ETHER
 #include <dev/eth_mcux.h>
