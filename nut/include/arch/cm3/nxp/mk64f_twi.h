@@ -6,19 +6,28 @@
  ******************************************************************************/
 
 /**
- * @file mk64f_irqreg.h
+ * @file mk64f_twi.h
  * @author Ilja Kartašov <ik@lowenware.com>
  * @brief 
  *
  * @see https://lowenware.com/
  */
 
-#ifndef MK64F_IRQREG_H_15DDB119_2B5A_4DA9_BD1E_E738271DE233
-#define MK64F_IRQREG_H_15DDB119_2B5A_4DA9_BD1E_E738271DE233
+#ifndef MK64F_TWI_H_541E1301_9605_4936_A11C_0277DC1F1BFF
+#define MK64F_TWI_H_541E1301_9605_4936_A11C_0277DC1F1BFF
 
-extern IRQ_HANDLER sig_I2C0;     // I2C 0 event
-extern IRQ_HANDLER sig_USART0;     // I2C 0 event
-extern IRQ_HANDLER sig_USART4;     // I2C 0 event
-extern IRQ_HANDLER sig_USART5;     // I2C 0 event
+#ifndef DEF_TWIBUS
+#ifdef I2CBUS1_AS_DEFAULT
+#define DEF_TWIBUS Mk64fTwiBus1
+#else
+#define DEF_TWIBUS Mk64fTwiBus0
+#endif
+#endif
 
-#endif /* !MK64F_IRQREG_H */
+struct _NUTTWIICB {
+	char dummy;
+};
+
+typedef struct _NUTTWIICB NUTTWIICB;
+
+#endif /* !MK64F_TWI_H */

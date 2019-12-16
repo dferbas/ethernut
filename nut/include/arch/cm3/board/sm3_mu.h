@@ -15,6 +15,34 @@
 #include <dev/eth_mcux.h>
 #define DEV_ETHER devEthMcux
 #endif
+
+
+#ifndef DEV_UART0
+#include <arch/cm3/nxp/mk64f_usart.h>
+#define DEV_UART0 devMk64fUsart_0
+#define NUTUART0 DEV_UART0
+#endif
+
+
+#ifndef DEV_UART1
+#include <arch/cm3/nxp/mk64f_usart.h>
+#define DEV_UART1 devMk64fUsart_1
+#define NUTUART1 DEV_UART1
+#endif
+
+#ifndef DEV_UART2
+#include <arch/cm3/nxp/mk64f_usart.h>
+#define DEV_UART2 devMk64fUsart_2
+#define NUTUART2 DEV_UART2
+#endif
+
+#define BOARD_SDHC_BASEADDR SDHC
+#define BOARD_SDHC_CLK_FREQ CLOCK_GetFreq(kCLOCK_CoreSysClk)
+#define BOARD_SDHC_CD_GPIO_BASE GPIOC
+#define BOARD_SDHC_CD_GPIO_PIN 3U
+
+
+typedef void (*TMWDTResetFN)(void);
 /*!
  * @addtogroup pin_mux
  * @{
@@ -29,6 +57,28 @@ extern "C" {
 #endif
 
 
+#define BOARD_USART0_RE1_GPIO GPIOB
+#define BOARD_USART0_RE1_PIN 4
+#define BOARD_USART0_DE1_GPIO GPIOB
+#define BOARD_USART0_DE1_PIN 5
+#define BOARD_USART0_RE2_GPIO GPIOC
+#define BOARD_USART0_RE2_PIN 18
+#define BOARD_USART0_DE2_GPIO GPIOC
+#define BOARD_USART0_DE2_PIN 19
+
+#define BOARD_USART4_RE1_GPIO GPIOE
+#define BOARD_USART4_RE1_PIN 6
+#define BOARD_USART4_DE1_GPIO GPIOE
+#define BOARD_USART4_DE1_PIN 7
+
+#define BOARD_USART5_DTR_GPIO GPIOE
+#define BOARD_USART5_DTR_PIN 26
+#define BOARD_USART5_RI_GPIO GPIOE
+#define BOARD_USART5_RI_PIN 27
+#define BOARD_USART5_RTS_GPIO GPIOE
+#define BOARD_USART5_RTS_PIN 11
+#define BOARD_USART5_CTS_GPIO GPIOE
+#define BOARD_USART5_CTS_PIN 10
 
 #define SOPT5_UART0TXSRC_UART_TX 0x00u /*!<@brief UART 0 transmit data source select: UART0_TX pin */
 
@@ -192,6 +242,25 @@ extern "C" {
 #define BOARD_INITPINS_SDHC_CD_PORT PORTC /*!<@brief PORT device name: PORTC */
 #define BOARD_INITPINS_SDHC_CD_PIN 3U     /*!<@brief PORTC pin index: 3 */
                                           /* @} */
+
+/*
+ * Application API
+ */
+#define HBUS232_DTR_OUT_PORT		PORTAN
+#define HBUS232_DTR_OUT_PIN			5
+
+#define PIGGYBACK232_IN_PORT		PORTQS
+#define PIGGYBACK232_IN_PIN			6
+
+
+typedef enum
+{
+	pbsYZ_FULL_DUP_485,				//full duplex available -> no piggy-232
+	pbsYZ_FULL_DUP_232,
+} EPiggyBackState;
+
+void SetDtrState(int state);
+EPiggyBackState GetPiggyBackState(void);
 
 /*!
  * @brief Calls initialization functions.

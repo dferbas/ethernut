@@ -32,7 +32,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "fsl_sdmmc_common.h"
+#include <arch/cm3/nxp/vendor/fsl_sdmmc_common.h>
 /*******************************************************************************
  * Variables
  ******************************************************************************/
@@ -46,7 +46,7 @@ status_t SDMMC_SelectCard(SDMMCHOST_TYPE *base,
                           uint32_t relativeAddress,
                           bool isSelected)
 {
-    assert(transfer);
+    // assert(transfer);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -78,7 +78,7 @@ status_t SDMMC_SendApplicationCommand(SDMMCHOST_TYPE *base,
                                       SDMMCHOST_TRANSFER_FUNCTION transfer,
                                       uint32_t relativeAddress)
 {
-    assert(transfer);
+    // assert(transfer);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -104,7 +104,7 @@ status_t SDMMC_SendApplicationCommand(SDMMCHOST_TYPE *base,
 
 status_t SDMMC_SetBlockCount(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION transfer, uint32_t blockCount)
 {
-    assert(transfer);
+    // assert(transfer);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -125,7 +125,7 @@ status_t SDMMC_SetBlockCount(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION t
 
 status_t SDMMC_GoIdle(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION transfer)
 {
-    assert(transfer);
+    // assert(transfer);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -144,7 +144,7 @@ status_t SDMMC_GoIdle(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION transfer
 
 status_t SDMMC_SetBlockSize(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION transfer, uint32_t blockSize)
 {
-    assert(transfer);
+    // assert(transfer);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -165,7 +165,7 @@ status_t SDMMC_SetBlockSize(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION tr
 
 status_t SDMMC_SetCardInactive(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION transfer)
 {
-    assert(transfer);
+    // assert(transfer);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -186,7 +186,7 @@ status_t SDMMC_SetCardInactive(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION
 
 status_t SDMMC_SwitchVoltage(SDMMCHOST_TYPE *base, SDMMCHOST_TRANSFER_FUNCTION transfer)
 {
-    assert(transfer);
+    // assert(transfer);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};

@@ -85,50 +85,86 @@ pin_labels:
 
 static void NutBoardInitGpio(void)
 {
-/*
-    gpio_pin_config_t ETH_PHY_RESET_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U
-    };
-		*/
-    /* Initialize GPIO functionality on pin PTA4 (pin 54)  */
-    //GPIO_PinInit(GPIOA, PIN4_IDX, &ETH_PHY_RESET_config);
+	gpio_pin_config_t pin_config;
+	memset(&pin_config, 0, sizeof(pin_config));
 
+	/* Status LED */
+	pin_config.pinDirection = kGPIO_DigitalOutput;
+	pin_config.outputLogic = 0U;
+	GPIO_PinInit(GPIOD, PIN15_IDX, &pin_config);
 
-    gpio_pin_config_t LED_STATUS_G_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U
-    };
-    GPIO_PinInit(GPIOD, PIN15_IDX, &LED_STATUS_G_config);
+	/* UART0 - 485 RE1 */
+	GPIO_PinInit(GPIOB, PIN4_IDX, &pin_config);
+	/* UART0 - 485 DE1 */
+	GPIO_PinInit(GPIOB, PIN5_IDX, &pin_config);
+	/* UART0 - 485 RE2 */
+	GPIO_PinInit(GPIOC, PIN18_IDX, &pin_config);
+	/* UART0 - 485 DE2 */
+	GPIO_PinInit(GPIOC, PIN19_IDX, &pin_config);
+
+	/* UART4 - 485 RE1 */
+	GPIO_PinInit(GPIOE, PIN6_IDX, &pin_config);
+	/* UART4 - 485 DE1 */
+	GPIO_PinInit(GPIOE, PIN7_IDX, &pin_config);
+
+	/* UART5 - 232 DTR */
+	GPIO_PinInit(GPIOE, PIN26_IDX, &pin_config);
+	/* UART5 - 232 RI */
+	GPIO_PinInit(GPIOE, PIN27_IDX, &pin_config);
 }
 
 static void NutBoardInitPinMux(void)
 {
-    /* Initialize GPIO functionality on pin PTD12 (pin 141)  */
 
-  PORT_SetPinMux(PORTC, PIN6_IDX, kPORT_MuxAsGpio);
-  PORT_SetPinMux(PORTC, PIN13_IDX, kPORT_MuxAsGpio);
+	/* UART 0 */
+	PORT_SetPinMux(PORTA, PIN1_IDX, kPORT_MuxAlt2);
+	PORT_SetPinMux(PORTA, PIN2_IDX, kPORT_MuxAlt2);
+	PORT_SetPinMux(PORTB, PIN4_IDX, kPORT_MuxAsGpio);
+	PORT_SetPinMux(PORTB, PIN5_IDX, kPORT_MuxAsGpio);
+	PORT_SetPinMux(PORTC, PIN18_IDX, kPORT_MuxAsGpio);
+	PORT_SetPinMux(PORTC, PIN19_IDX, kPORT_MuxAsGpio);
+
+	/* UART 4 */
+	PORT_SetPinMux(PORTE, 6U, kPORT_MuxAsGpio);
+	PORT_SetPinMux(PORTE, 7U, kPORT_MuxAsGpio);
+	PORT_SetPinMux(PORTE, 24U, kPORT_MuxAlt3);
+	PORT_SetPinMux(PORTE, 25U, kPORT_MuxAlt3);
+
+	/* UART 5 */
+	PORT_SetPinMux(PORTE, 8U, kPORT_MuxAlt3);
+	PORT_SetPinMux(PORTE, 9U, kPORT_MuxAlt3);
+	PORT_SetPinMux(PORTE, 10U, kPORT_MuxAlt3);
+	PORT_SetPinMux(PORTE, 11U, kPORT_MuxAlt3);
+	PORT_SetPinMux(PORTE, 26U, kPORT_MuxAsGpio);
+	PORT_SetPinMux(PORTE, 27U, kPORT_MuxAsGpio);
 
 
-  PORT_SetPinMux(PORTA, PIN4_IDX, kPORT_MuxAsGpio);            /* PORTA5 (pin 39) is configured as PHY_RESET */
-  PORT_SetPinMux(PORTA, PIN5_IDX, kPORT_MuxAlt4);            /* PORTA5 (pin 39) is configured as MII0_RXER */
-  PORT_SetPinMux(PORTA, PIN9_IDX, kPORT_MuxAlt4);            /* PORTA5 (pin 39) is configured as MII0_RXD3 */
-  PORT_SetPinMux(PORTA, PIN10_IDX, kPORT_MuxAlt4);           /* PORTA12 (pin 42) is configured as MII0_RXD2 */
-  PORT_SetPinMux(PORTA, PIN11_IDX, kPORT_MuxAlt4);           /* PORTA12 (pin 42) is configured as MII0_RXCLK */
-  PORT_SetPinMux(PORTA, PIN12_IDX, kPORT_MuxAlt4);           /* PORTA12 (pin 42) is configured as MII0_RXD1 */
-  PORT_SetPinMux(PORTA, PIN13_IDX, kPORT_MuxAlt4);           /* PORTA13 (pin 43) is configured as MII0_RXD0 */
-  PORT_SetPinMux(PORTA, PIN14_IDX, kPORT_MuxAlt4);           /* PORTA14 (pin 44) is configured as MII0_CRS_DV */
-  PORT_SetPinMux(PORTA, PIN15_IDX, kPORT_MuxAlt4);           /* PORTA15 (pin 45) is configured as MII0_TXEN */
-  PORT_SetPinMux(PORTA, PIN16_IDX, kPORT_MuxAlt4);           /* PORTA16 (pin 46) is configured as MII0_TXD0 */
-  PORT_SetPinMux(PORTA, PIN17_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_TXD1 */
-  PORT_SetPinMux(PORTA, PIN18_IDX, kPORT_PinDisabledOrAnalog);
-  PORT_SetPinMux(PORTA, PIN19_IDX, kPORT_PinDisabledOrAnalog);
-  PORT_SetPinMux(PORTA, PIN24_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_TXD2 */
-  PORT_SetPinMux(PORTA, PIN25_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_TXCLK*/
-  PORT_SetPinMux(PORTA, PIN26_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_TXD3 */
-  PORT_SetPinMux(PORTA, PIN27_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_CRS */
-  PORT_SetPinMux(PORTA, PIN28_IDX, kPORT_MuxAsGpio);           /* PORTA17 (pin 47) is configured as MII0_CRS */
-  PORT_SetPinMux(PORTA, PIN29_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_COL */
+
+		/* Initialize GPIO functionality on pin PTD12 (pin 141)  */
+
+	PORT_SetPinMux(PORTC, PIN6_IDX, kPORT_MuxAsGpio);
+	PORT_SetPinMux(PORTC, PIN13_IDX, kPORT_MuxAsGpio);
+
+
+	PORT_SetPinMux(PORTA, PIN4_IDX, kPORT_MuxAsGpio);            /* PORTA5 (pin 39) is configured as PHY_RESET */
+	PORT_SetPinMux(PORTA, PIN5_IDX, kPORT_MuxAlt4);            /* PORTA5 (pin 39) is configured as MII0_RXER */
+	PORT_SetPinMux(PORTA, PIN9_IDX, kPORT_MuxAlt4);            /* PORTA5 (pin 39) is configured as MII0_RXD3 */
+	PORT_SetPinMux(PORTA, PIN10_IDX, kPORT_MuxAlt4);           /* PORTA12 (pin 42) is configured as MII0_RXD2 */
+	PORT_SetPinMux(PORTA, PIN11_IDX, kPORT_MuxAlt4);           /* PORTA12 (pin 42) is configured as MII0_RXCLK */
+	PORT_SetPinMux(PORTA, PIN12_IDX, kPORT_MuxAlt4);           /* PORTA12 (pin 42) is configured as MII0_RXD1 */
+	PORT_SetPinMux(PORTA, PIN13_IDX, kPORT_MuxAlt4);           /* PORTA13 (pin 43) is configured as MII0_RXD0 */
+	PORT_SetPinMux(PORTA, PIN14_IDX, kPORT_MuxAlt4);           /* PORTA14 (pin 44) is configured as MII0_CRS_DV */
+	PORT_SetPinMux(PORTA, PIN15_IDX, kPORT_MuxAlt4);           /* PORTA15 (pin 45) is configured as MII0_TXEN */
+	PORT_SetPinMux(PORTA, PIN16_IDX, kPORT_MuxAlt4);           /* PORTA16 (pin 46) is configured as MII0_TXD0 */
+	PORT_SetPinMux(PORTA, PIN17_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_TXD1 */
+	PORT_SetPinMux(PORTA, PIN18_IDX, kPORT_PinDisabledOrAnalog);
+	PORT_SetPinMux(PORTA, PIN19_IDX, kPORT_PinDisabledOrAnalog);
+	PORT_SetPinMux(PORTA, PIN24_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_TXD2 */
+	PORT_SetPinMux(PORTA, PIN25_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_TXCLK*/
+	PORT_SetPinMux(PORTA, PIN26_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_TXD3 */
+	PORT_SetPinMux(PORTA, PIN27_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_CRS */
+	PORT_SetPinMux(PORTA, PIN28_IDX, kPORT_MuxAsGpio);           /* PORTA17 (pin 47) is configured as MII0_CRS */
+	PORT_SetPinMux(PORTA, PIN29_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_COL */
 
 //  const port_pin_config_t portb0_pin53_config = {
 //    kPORT_PullUp,                                            /* Internal pull-up resistor is enabled */
@@ -140,42 +176,59 @@ static void NutBoardInitPinMux(void)
 //    kPORT_UnlockRegister                                     /* Pin Control Register fields [15:0] are not locked */
 //  };
 //  PORT_SetPinConfig(PORTB, PIN0_IDX, &portb0_pin53_config);  /* PORTB0 (pin 53) is configured as RMII0_MDIO */
-  PORT_SetPinMux(PORTB, PIN0_IDX, kPORT_MuxAlt4);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
-  PORT_SetPinMux(PORTB, PIN1_IDX, kPORT_MuxAlt4);            /* PORTB1 (pin 54) is configured as MII0_MDC */
+	PORT_SetPinMux(PORTB, PIN0_IDX, kPORT_MuxAlt4);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+	PORT_SetPinMux(PORTB, PIN1_IDX, kPORT_MuxAlt4);            /* PORTB1 (pin 54) is configured as MII0_MDC */
 
-  PORT_SetPinMux(PORTC, PIN16_IDX, kPORT_MuxAlt5);           /* PORTC16 (pin 90) is configured as ENET0_1588_TMR0 */
-  PORT_SetPinMux(PORTC, PIN17_IDX, kPORT_MuxAlt5);           /* PORTC17 (pin 91) is configured as ENET0_1588_TMR1 */
-  PORT_SetPinMux(PORTC, PIN18_IDX, kPORT_MuxAsGpio);           /* PORTC18 (pin 92) is configured as ENET0_1588_TMR2 */
-  PORT_SetPinMux(PORTC, PIN19_IDX, kPORT_MuxAsGpio);           /* PORTC18 (pin 92) is configured as ENET0_1588_TMR2 */
+	PORT_SetPinMux(PORTC, PIN16_IDX, kPORT_MuxAlt5);           /* PORTC16 (pin 90) is configured as ENET0_1588_TMR0 */
+	PORT_SetPinMux(PORTC, PIN17_IDX, kPORT_MuxAlt5);           /* PORTC17 (pin 91) is configured as ENET0_1588_TMR1 */
+	PORT_SetPinMux(PORTC, PIN18_IDX, kPORT_MuxAsGpio);           /* PORTC18 (pin 92) is configured as ENET0_1588_TMR2 */
+	PORT_SetPinMux(PORTC, PIN19_IDX, kPORT_MuxAsGpio);           /* PORTC18 (pin 92) is configured as ENET0_1588_TMR2 */
 
 	/*˙UART MCUX_0 */
-  PORT_SetPinMux(PORTB, PIN16_IDX, kPORT_MuxAlt3);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
-  PORT_SetPinMux(PORTB, PIN17_IDX, kPORT_MuxAlt3);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
-  PORT_SetPinMux(PORTB, PIN21_IDX, kPORT_MuxAsGpio);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
-  PORT_SetPinMux(PORTB, PIN22_IDX, kPORT_MuxAsGpio);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
-  PORT_SetPinMux(PORTE, PIN26_IDX, kPORT_MuxAsGpio);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+	PORT_SetPinMux(PORTB, PIN16_IDX, kPORT_MuxAlt3);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+	PORT_SetPinMux(PORTB, PIN17_IDX, kPORT_MuxAlt3);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+	PORT_SetPinMux(PORTB, PIN21_IDX, kPORT_MuxAsGpio);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+	PORT_SetPinMux(PORTB, PIN22_IDX, kPORT_MuxAsGpio);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+	PORT_SetPinMux(PORTE, PIN26_IDX, kPORT_MuxAsGpio);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
 	
+	/* I2C0 SCL */
+	PORT_SetPinMux(PORTB, PIN2_IDX, kPORT_MuxAlt2);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+	/* I2C0 SDA */
+	PORT_SetPinMux(PORTB, PIN3_IDX, kPORT_MuxAlt2);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
 	/* Status LED */
-  PORT_SetPinMux(PORTD, PIN15_IDX, kPORT_MuxAsGpio);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+	PORT_SetPinMux(PORTD, PIN15_IDX, kPORT_MuxAsGpio);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
 
-  SIM->SOPT5 = ((SIM->SOPT5 &
-    (~(SIM_SOPT5_UART0TXSRC_MASK)))                          /* Mask bits to zero which are setting */
-      | SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX)       /* UART 0 transmit data source select: UART0_TX pin */
-    );
+	/* SDHC -- PORT_PCR_MUX(kPORT_PullUp) */
+	PORT_SetPinMux(PORTE, 0, kPORT_MuxAlt4); // | PORT_PCR_DSE_MASK);
+	PORT_SetPinMux(PORTE, 1, kPORT_MuxAlt4); // | PORT_PCR_DSE_MASK);
+	PORT_SetPinMux(PORTE, 2, kPORT_MuxAlt4); // | PORT_PCR_DSE_MASK);
+	PORT_SetPinMux(PORTE, 3, kPORT_MuxAlt4); // | PORT_PCR_DSE_MASK);
+	PORT_SetPinMux(PORTE, 4, kPORT_MuxAlt4); // | PORT_PCR_DSE_MASK);
+	PORT_SetPinMux(PORTE, 5, kPORT_MuxAlt4); // | PORT_PCR_DSE_MASK);
+
+	/* SDHC GPIO Card Detect pin */
+	PORT_SetPinMux(PORTC, 3, kPORT_MuxAsGpio);
+
+
+
+	SIM->SOPT5 = ((SIM->SOPT5 &
+		(~(SIM_SOPT5_UART0TXSRC_MASK)))                          /* Mask bits to zero which are setting */
+			| SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX)       /* UART 0 transmit data source select: UART0_TX pin */
+		);
 }
 
 void NutBoardInit(void)
 {
-    /* Port A Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortA);
-    /* Port B Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortB);
-    /* Port C Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortC);
-    /* Port D Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortD);
-    /* Port E Clock Gate Control: Clock enabled */
-    CLOCK_EnableClock(kCLOCK_PortE);
+		/* Port A Clock Gate Control: Clock enabled */
+		CLOCK_EnableClock(kCLOCK_PortA);
+		/* Port B Clock Gate Control: Clock enabled */
+		CLOCK_EnableClock(kCLOCK_PortB);
+		/* Port C Clock Gate Control: Clock enabled */
+		CLOCK_EnableClock(kCLOCK_PortC);
+		/* Port D Clock Gate Control: Clock enabled */
+		CLOCK_EnableClock(kCLOCK_PortD);
+		/* Port E Clock Gate Control: Clock enabled */
+		CLOCK_EnableClock(kCLOCK_PortE);
 
 	NutBoardInitGpio();
 	NutBoardInitPinMux();
@@ -190,108 +243,108 @@ void NutBoardInit(void)
 BOARD_InitPins:
 - options: {callFromInitBoot: 'true', coreID: core0, enableClock: 'true'}
 - pin_list:
-  - {pin_num: '80', peripheral: ENET, signal: MII_COL, pin_signal: PTA29/MII0_COL/FB_A24}
-  - {pin_num: '78', peripheral: ENET, signal: MII_CRS, pin_signal: PTA27/MII0_CRS/FB_A26}
-  - {pin_num: '77', peripheral: ENET, signal: MII_TXD3, pin_signal: PTA26/MII0_TXD3/FB_A27}
-  - {pin_num: '76', peripheral: ENET, signal: MII_TXCLK, pin_signal: PTA25/MII0_TXCLK/FB_A28}
-  - {pin_num: '75', peripheral: ENET, signal: MII_TXD2, pin_signal: PTA24/MII0_TXD2/FB_A29}
-  - {pin_num: '69', peripheral: ENET, signal: MII_TXD1, pin_signal: ADC1_SE17/PTA17/SPI0_SIN/UART0_RTS_b/RMII0_TXD1/MII0_TXD1/I2S0_MCLK}
-  - {pin_num: '68', peripheral: ENET, signal: MII_TXD0, pin_signal: PTA16/SPI0_SOUT/UART0_CTS_b/UART0_COL_b/RMII0_TXD0/MII0_TXD0/I2S0_RX_FS/I2S0_RXD1}
-  - {pin_num: '67', peripheral: ENET, signal: MII_TXEN, pin_signal: PTA15/SPI0_SCK/UART0_RX/RMII0_TXEN/MII0_TXEN/I2S0_RXD0}
-  - {pin_num: '66', peripheral: ENET, signal: MII_RXDV, pin_signal: PTA14/SPI0_PCS0/UART0_TX/RMII0_CRS_DV/MII0_RXDV/I2C2_SCL/I2S0_RX_BCLK/I2S0_TXD1}
-  - {pin_num: '65', peripheral: ENET, signal: MII_RXD0, pin_signal: CMP2_IN1/PTA13/LLWU_P4/CAN0_RX/FTM1_CH1/RMII0_RXD0/MII0_RXD0/I2C2_SDA/I2S0_TX_FS/FTM1_QD_PHB}
-  - {pin_num: '64', peripheral: ENET, signal: MII_RXD1, pin_signal: CMP2_IN0/PTA12/CAN0_TX/FTM1_CH0/RMII0_RXD1/MII0_RXD1/I2C2_SCL/I2S0_TXD0/FTM1_QD_PHA}
-  - {pin_num: '63', peripheral: ENET, signal: MII_RXCLK, pin_signal: PTA11/FTM2_CH1/MII0_RXCLK/I2C2_SDA/FTM2_QD_PHB}
-  - {pin_num: '62', peripheral: ENET, signal: MII_RXD2, pin_signal: PTA10/FTM2_CH0/MII0_RXD2/FTM2_QD_PHA/TRACE_D0}
-  - {pin_num: '61', peripheral: ENET, signal: MII_RXD3, pin_signal: PTA9/FTM1_CH1/MII0_RXD3/FTM1_QD_PHB/TRACE_D1}
-  - {pin_num: '55', peripheral: ENET, signal: MII_RXER, pin_signal: PTA5/USB_CLKIN/FTM0_CH2/RMII0_RXER/MII0_RXER/CMP2_OUT/I2S0_TX_BCLK/JTAG_TRST_b}
-  - {pin_num: '82', peripheral: ENET, signal: MII_MDC, pin_signal: ADC0_SE9/ADC1_SE9/PTB1/I2C0_SDA/FTM1_CH1/RMII0_MDC/MII0_MDC/FTM1_QD_PHB}
-  - {pin_num: '81', peripheral: ENET, signal: MII_MDIO, pin_signal: ADC0_SE8/ADC1_SE8/PTB0/LLWU_P5/I2C0_SCL/FTM1_CH0/RMII0_MDIO/MII0_MDIO/FTM1_QD_PHA}
-  - {pin_num: '51', peripheral: UART0, signal: RX, pin_signal: PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI}
-  - {pin_num: '52', peripheral: UART0, signal: TX, pin_signal: PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO}
-  - {pin_num: '99', peripheral: FB, signal: 'AD, 31', pin_signal: PTB20/SPI2_PCS0/FB_AD31/CMP0_OUT}
-  - {pin_num: '100', peripheral: FB, signal: 'AD, 30', pin_signal: PTB21/SPI2_SCK/FB_AD30/CMP1_OUT}
-  - {pin_num: '101', peripheral: FB, signal: 'AD, 29', pin_signal: PTB22/SPI2_SOUT/FB_AD29/CMP2_OUT}
-  - {pin_num: '102', peripheral: FB, signal: 'AD, 28', pin_signal: PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28}
-  - {pin_num: '117', peripheral: FB, signal: 'AD, 27', pin_signal: PTC12/UART4_RTS_b/FB_AD27/FTM3_FLT0}
-  - {pin_num: '118', peripheral: FB, signal: 'AD, 26', pin_signal: PTC13/UART4_CTS_b/FB_AD26}
-  - {pin_num: '119', peripheral: FB, signal: 'AD, 25', pin_signal: PTC14/UART4_RX/FB_AD25}
-  - {pin_num: '120', peripheral: FB, signal: 'AD, 24', pin_signal: PTC15/UART4_TX/FB_AD24}
-  - {pin_num: '87', peripheral: FB, signal: 'AD, 23', pin_signal: ADC1_SE12/PTB6/FB_AD23}
-  - {pin_num: '88', peripheral: FB, signal: 'AD, 22', pin_signal: ADC1_SE13/PTB7/FB_AD22}
-  - {pin_num: '89', peripheral: FB, signal: 'AD, 21', pin_signal: PTB8/UART3_RTS_b/FB_AD21}
-  - {pin_num: '90', peripheral: FB, signal: 'AD, 20', pin_signal: PTB9/SPI1_PCS1/UART3_CTS_b/FB_AD20}
-  - {pin_num: '91', peripheral: FB, signal: 'AD, 19', pin_signal: ADC1_SE14/PTB10/SPI1_PCS0/UART3_RX/FB_AD19/FTM0_FLT1}
-  - {pin_num: '92', peripheral: FB, signal: 'AD, 18', pin_signal: ADC1_SE15/PTB11/SPI1_SCK/UART3_TX/FB_AD18/FTM0_FLT2}
-  - {pin_num: '95', peripheral: FB, signal: 'AD, 17', pin_signal: PTB16/SPI1_SOUT/UART0_RX/FTM_CLKIN0/FB_AD17/EWM_IN}
-  - {pin_num: '96', peripheral: FB, signal: 'AD, 16', pin_signal: PTB17/SPI1_SIN/UART0_TX/FTM_CLKIN1/FB_AD16/EWM_OUT_b}
-  - {pin_num: '97', peripheral: FB, signal: 'AD, 15', pin_signal: PTB18/CAN0_TX/FTM2_CH0/I2S0_TX_BCLK/FB_AD15/FTM2_QD_PHA}
-  - {pin_num: '103', peripheral: FB, signal: 'AD, 14', pin_signal: ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1}
-  - {pin_num: '104', peripheral: FB, signal: 'AD, 13', pin_signal: ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0}
-  - {pin_num: '105', peripheral: FB, signal: 'AD, 12', pin_signal: ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS}
-  - {pin_num: '109', peripheral: FB, signal: 'AD, 11', pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT}
-  - {pin_num: '110', peripheral: FB, signal: 'AD, 10', pin_signal: PTC5/LLWU_P9/SPI0_SCK/LPTMR0_ALT2/I2S0_RXD0/FB_AD10/CMP0_OUT/FTM0_CH2}
-  - {pin_num: '111', peripheral: FB, signal: 'AD, 9', pin_signal: CMP0_IN0/PTC6/LLWU_P10/SPI0_SOUT/PDB0_EXTRG/I2S0_RX_BCLK/FB_AD9/I2S0_MCLK}
-  - {pin_num: '112', peripheral: FB, signal: 'AD, 8', pin_signal: CMP0_IN1/PTC7/SPI0_SIN/USB_SOF_OUT/I2S0_RX_FS/FB_AD8}
-  - {pin_num: '113', peripheral: FB, signal: 'AD, 7', pin_signal: ADC1_SE4b/CMP0_IN2/PTC8/FTM3_CH4/I2S0_MCLK/FB_AD7}
-  - {pin_num: '114', peripheral: FB, signal: 'AD, 6', pin_signal: ADC1_SE5b/CMP0_IN3/PTC9/FTM3_CH5/I2S0_RX_BCLK/FB_AD6/FTM2_FLT0}
-  - {pin_num: '115', peripheral: FB, signal: 'AD, 5', pin_signal: ADC1_SE6b/PTC10/I2C1_SCL/FTM3_CH6/I2S0_RX_FS/FB_AD5}
-  - {pin_num: '129', peripheral: FB, signal: 'AD, 4', pin_signal: PTD2/LLWU_P13/SPI0_SOUT/UART2_RX/FTM3_CH2/FB_AD4/I2C0_SCL}
-  - {pin_num: '130', peripheral: FB, signal: 'AD, 3', pin_signal: PTD3/SPI0_SIN/UART2_TX/FTM3_CH3/FB_AD3/I2C0_SDA}
-  - {pin_num: '131', peripheral: FB, signal: 'AD, 2', pin_signal: PTD4/LLWU_P14/SPI0_PCS1/UART0_RTS_b/FTM0_CH4/FB_AD2/EWM_IN/SPI1_PCS0}
-  - {pin_num: '132', peripheral: FB, signal: 'AD, 1', pin_signal: ADC0_SE6b/PTD5/SPI0_PCS2/UART0_CTS_b/UART0_COL_b/FTM0_CH5/FB_AD1/EWM_OUT_b/SPI1_SCK}
-  - {pin_num: '137', peripheral: FB, signal: 'A, 16', pin_signal: PTD8/I2C0_SCL/UART5_RX/FB_A16}
-  - {pin_num: '138', peripheral: FB, signal: 'A, 17', pin_signal: PTD9/I2C0_SDA/UART5_TX/FB_A17}
-  - {pin_num: '139', peripheral: FB, signal: 'A, 18', pin_signal: PTD10/UART5_RTS_b/FB_A18}
-  - {pin_num: '140', peripheral: FB, signal: 'A, 19', pin_signal: PTD11/SPI2_PCS0/UART5_CTS_b/SDHC0_CLKIN/FB_A19}
-  - {pin_num: '128', peripheral: FB, signal: CS0, pin_signal: ADC0_SE5b/PTD1/SPI0_SCK/UART2_CTS_b/FTM3_CH1/FB_CS0_b}
-  - {pin_num: '98', peripheral: FB, signal: OE, pin_signal: PTB19/CAN0_RX/FTM2_CH1/I2S0_TX_FS/FB_OE_b/FTM2_QD_PHB}
-  - {pin_num: '116', peripheral: FB, signal: RW, pin_signal: ADC1_SE7b/PTC11/LLWU_P11/I2C1_SDA/FTM3_CH7/I2S0_RXD1/FB_RW_b}
-  - {pin_num: '124', peripheral: FB, signal: CS4_TSIZ0_BE31_24_BLS7_0, pin_signal: PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b}
-  - {pin_num: '123', peripheral: FB, signal: CS5_TSIZ1_BE23_16_BLS15_8, pin_signal: PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b}
-  - {pin_num: '46', peripheral: UART4, signal: RX, pin_signal: ADC0_SE18/PTE25/UART4_RX/I2C0_SDA/EWM_IN}
-  - {pin_num: '45', peripheral: UART4, signal: TX, pin_signal: ADC0_SE17/PTE24/UART4_TX/I2C0_SCL/EWM_OUT_b}
-  - {pin_num: '14', peripheral: UART5, signal: RTS, pin_signal: PTE11/UART5_RTS_b/I2S0_TX_FS/FTM3_CH6}
-  - {pin_num: '13', peripheral: UART5, signal: CTS, pin_signal: PTE10/UART5_CTS_b/I2S0_TXD0/FTM3_CH5}
-  - {pin_num: '12', peripheral: UART5, signal: RX, pin_signal: PTE9/I2S0_TXD1/UART5_RX/I2S0_RX_BCLK/FTM3_CH4}
-  - {pin_num: '11', peripheral: UART5, signal: TX, pin_signal: PTE8/I2S0_RXD1/UART5_TX/I2S0_RX_FS/FTM3_CH3}
-  - {pin_num: '2', peripheral: SDHC, signal: 'DATA, 0', pin_signal: ADC1_SE5a/PTE1/LLWU_P0/SPI1_SOUT/UART1_RX/SDHC0_D0/TRACE_D3/I2C1_SCL/SPI1_SIN}
-  - {pin_num: '1', peripheral: SDHC, signal: 'DATA, 1', pin_signal: ADC1_SE4a/PTE0/SPI1_PCS1/UART1_TX/SDHC0_D1/TRACE_CLKOUT/I2C1_SDA/RTC_CLKOUT}
-  - {pin_num: '8', peripheral: SDHC, signal: 'DATA, 2', pin_signal: PTE5/SPI1_PCS2/UART3_RX/SDHC0_D2/FTM3_CH0}
-  - {pin_num: '7', peripheral: SDHC, signal: 'DATA, 3', pin_signal: PTE4/LLWU_P2/SPI1_PCS0/UART3_TX/SDHC0_D3/TRACE_D0}
-  - {pin_num: '4', peripheral: SDHC, signal: CMD, pin_signal: ADC0_DM2/ADC1_SE7a/PTE3/SPI1_SIN/UART1_RTS_b/SDHC0_CMD/TRACE_D1/SPI1_SOUT}
-  - {pin_num: '3', peripheral: SDHC, signal: DCLK, pin_signal: ADC0_DP2/ADC1_SE6a/PTE2/LLWU_P1/SPI1_SCK/UART1_CTS_b/SDHC0_DCLK/TRACE_D2}
-  - {pin_num: '24', peripheral: ADC0, signal: 'DM, 1', pin_signal: ADC0_DM1}
-  - {pin_num: '23', peripheral: ADC0, signal: 'DP, 1', pin_signal: ADC0_DP1}
-  - {pin_num: '49', peripheral: GPIOE, signal: 'GPIO, 28', pin_signal: PTE28, direction: INPUT}
-  - {pin_num: '48', peripheral: GPIOE, signal: 'GPIO, 27', pin_signal: PTE27/UART4_RTS_b, direction: INPUT}
-  - {pin_num: '47', peripheral: GPIOE, signal: 'GPIO, 26', pin_signal: PTE26/ENET_1588_CLKIN/UART4_CTS_b/RTC_CLKOUT/USB_CLKIN, direction: OUTPUT}
-  - {pin_num: '15', peripheral: GPIOE, signal: 'GPIO, 12', pin_signal: PTE12/I2S0_TX_BCLK/FTM3_CH7, direction: OUTPUT}
-  - {pin_num: '9', peripheral: GPIOE, signal: 'GPIO, 6', pin_signal: PTE6/SPI1_PCS3/UART3_CTS_b/I2S0_MCLK/FTM3_CH1/USB_SOF_OUT, direction: OUTPUT}
-  - {pin_num: '10', peripheral: GPIOE, signal: 'GPIO, 7', pin_signal: PTE7/UART3_RTS_b/I2S0_RXD0/FTM3_CH2, direction: OUTPUT}
-  - {pin_num: '127', peripheral: GPIOD, signal: 'GPIO, 0', pin_signal: PTD0/LLWU_P12/SPI0_PCS0/UART2_RTS_b/FTM3_CH0/FB_ALE/FB_CS1_b/FB_TS_b, direction: OUTPUT}
-  - {pin_num: '133', peripheral: GPIOD, signal: 'GPIO, 6', pin_signal: ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FB_AD0/FTM0_FLT0/SPI1_SOUT, direction: INPUT}
-  - {pin_num: '136', peripheral: GPIOD, signal: 'GPIO, 7', pin_signal: PTD7/CMT_IRO/UART0_TX/FTM0_CH7/FTM0_FLT1/SPI1_SIN, direction: OUTPUT}
-  - {pin_num: '141', peripheral: GPIOD, signal: 'GPIO, 12', pin_signal: PTD12/SPI2_SCK/FTM3_FLT0/SDHC0_D4/FB_A20, direction: OUTPUT}
-  - {pin_num: '142', peripheral: GPIOD, signal: 'GPIO, 13', pin_signal: PTD13/SPI2_SOUT/SDHC0_D5/FB_A21, direction: OUTPUT}
-  - {pin_num: '143', peripheral: GPIOD, signal: 'GPIO, 14', pin_signal: PTD14/SPI2_SIN/SDHC0_D6/FB_A22, direction: OUTPUT}
-  - {pin_num: '144', peripheral: GPIOD, signal: 'GPIO, 15', pin_signal: PTD15/SPI2_PCS1/SDHC0_D7/FB_A23, direction: OUTPUT}
-  - {pin_num: '125', peripheral: GPIOC, signal: 'GPIO, 18', pin_signal: PTC18/UART3_RTS_b/ENET0_1588_TMR2/FB_TBST_b/FB_CS2_b/FB_BE15_8_BLS23_16_b, direction: OUTPUT}
-  - {pin_num: '126', peripheral: GPIOC, signal: 'GPIO, 19', pin_signal: PTC19/UART3_CTS_b/ENET0_1588_TMR3/FB_CS3_b/FB_BE7_0_BLS31_24_b/FB_TA_b, direction: OUTPUT}
-  - {pin_num: '85', peripheral: GPIOB, signal: 'GPIO, 4', pin_signal: ADC1_SE10/PTB4/ENET0_1588_TMR2/FTM1_FLT0, direction: OUTPUT}
-  - {pin_num: '86', peripheral: GPIOB, signal: 'GPIO, 5', pin_signal: ADC1_SE11/PTB5/ENET0_1588_TMR3/FTM2_FLT0, direction: OUTPUT}
-  - {pin_num: '54', peripheral: GPIOA, signal: 'GPIO, 4', pin_signal: PTA4/LLWU_P3/FTM0_CH1/NMI_b/EZP_CS_b, direction: OUTPUT}
-  - {pin_num: '58', peripheral: GPIOA, signal: 'GPIO, 6', pin_signal: PTA6/FTM0_CH3/CLKOUT/TRACE_CLKOUT, identifier: OPTO_INP_0, direction: INPUT}
-  - {pin_num: '59', peripheral: GPIOA, signal: 'GPIO, 7', pin_signal: ADC0_SE10/PTA7/FTM0_CH4/TRACE_D3, identifier: OPTO_INP_1, direction: INPUT}
-  - {pin_num: '60', peripheral: GPIOA, signal: 'GPIO, 8', pin_signal: ADC0_SE11/PTA8/FTM1_CH0/FTM1_QD_PHA/TRACE_D2, identifier: OPTO_INP_2, direction: INPUT}
-  - {pin_num: '79', peripheral: GPIOA, signal: 'GPIO, 28', pin_signal: PTA28/MII0_TXER/FB_A25, direction: OUTPUT}
-  - {pin_num: '83', peripheral: I2C0, signal: SCL, pin_signal: ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/ENET0_1588_TMR0/FTM0_FLT3}
-  - {pin_num: '84', peripheral: I2C0, signal: SDA, pin_signal: ADC0_SE13/PTB3/I2C0_SDA/UART0_CTS_b/UART0_COL_b/ENET0_1588_TMR1/FTM0_FLT0}
-  - {pin_num: '106', peripheral: GPIOC, signal: 'GPIO, 3', pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK, direction: INPUT}
-  - {pin_num: '50', peripheral: JTAG, signal: JTAG_TCLK_SWD_CLK, pin_signal: PTA0/UART0_CTS_b/UART0_COL_b/FTM0_CH5/JTAG_TCLK/SWD_CLK/EZP_CLK}
-  - {pin_num: '53', peripheral: JTAG, signal: JTAG_TMS_SWD_DIO, pin_signal: PTA3/UART0_RTS_b/FTM0_CH0/JTAG_TMS/SWD_DIO}
-  - {pin_num: '72', peripheral: OSC, signal: EXTAL0, pin_signal: EXTAL0/PTA18/FTM0_FLT2/FTM_CLKIN0}
-  - {pin_num: '73', peripheral: OSC, signal: XTAL0, pin_signal: XTAL0/PTA19/FTM1_FLT0/FTM_CLKIN1/LPTMR0_ALT1}
+	- {pin_num: '80', peripheral: ENET, signal: MII_COL, pin_signal: PTA29/MII0_COL/FB_A24}
+	- {pin_num: '78', peripheral: ENET, signal: MII_CRS, pin_signal: PTA27/MII0_CRS/FB_A26}
+	- {pin_num: '77', peripheral: ENET, signal: MII_TXD3, pin_signal: PTA26/MII0_TXD3/FB_A27}
+	- {pin_num: '76', peripheral: ENET, signal: MII_TXCLK, pin_signal: PTA25/MII0_TXCLK/FB_A28}
+	- {pin_num: '75', peripheral: ENET, signal: MII_TXD2, pin_signal: PTA24/MII0_TXD2/FB_A29}
+	- {pin_num: '69', peripheral: ENET, signal: MII_TXD1, pin_signal: ADC1_SE17/PTA17/SPI0_SIN/UART0_RTS_b/RMII0_TXD1/MII0_TXD1/I2S0_MCLK}
+	- {pin_num: '68', peripheral: ENET, signal: MII_TXD0, pin_signal: PTA16/SPI0_SOUT/UART0_CTS_b/UART0_COL_b/RMII0_TXD0/MII0_TXD0/I2S0_RX_FS/I2S0_RXD1}
+	- {pin_num: '67', peripheral: ENET, signal: MII_TXEN, pin_signal: PTA15/SPI0_SCK/UART0_RX/RMII0_TXEN/MII0_TXEN/I2S0_RXD0}
+	- {pin_num: '66', peripheral: ENET, signal: MII_RXDV, pin_signal: PTA14/SPI0_PCS0/UART0_TX/RMII0_CRS_DV/MII0_RXDV/I2C2_SCL/I2S0_RX_BCLK/I2S0_TXD1}
+	- {pin_num: '65', peripheral: ENET, signal: MII_RXD0, pin_signal: CMP2_IN1/PTA13/LLWU_P4/CAN0_RX/FTM1_CH1/RMII0_RXD0/MII0_RXD0/I2C2_SDA/I2S0_TX_FS/FTM1_QD_PHB}
+	- {pin_num: '64', peripheral: ENET, signal: MII_RXD1, pin_signal: CMP2_IN0/PTA12/CAN0_TX/FTM1_CH0/RMII0_RXD1/MII0_RXD1/I2C2_SCL/I2S0_TXD0/FTM1_QD_PHA}
+	- {pin_num: '63', peripheral: ENET, signal: MII_RXCLK, pin_signal: PTA11/FTM2_CH1/MII0_RXCLK/I2C2_SDA/FTM2_QD_PHB}
+	- {pin_num: '62', peripheral: ENET, signal: MII_RXD2, pin_signal: PTA10/FTM2_CH0/MII0_RXD2/FTM2_QD_PHA/TRACE_D0}
+	- {pin_num: '61', peripheral: ENET, signal: MII_RXD3, pin_signal: PTA9/FTM1_CH1/MII0_RXD3/FTM1_QD_PHB/TRACE_D1}
+	- {pin_num: '55', peripheral: ENET, signal: MII_RXER, pin_signal: PTA5/USB_CLKIN/FTM0_CH2/RMII0_RXER/MII0_RXER/CMP2_OUT/I2S0_TX_BCLK/JTAG_TRST_b}
+	- {pin_num: '82', peripheral: ENET, signal: MII_MDC, pin_signal: ADC0_SE9/ADC1_SE9/PTB1/I2C0_SDA/FTM1_CH1/RMII0_MDC/MII0_MDC/FTM1_QD_PHB}
+	- {pin_num: '81', peripheral: ENET, signal: MII_MDIO, pin_signal: ADC0_SE8/ADC1_SE8/PTB0/LLWU_P5/I2C0_SCL/FTM1_CH0/RMII0_MDIO/MII0_MDIO/FTM1_QD_PHA}
+	- {pin_num: '51', peripheral: UART0, signal: RX, pin_signal: PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI}
+	- {pin_num: '52', peripheral: UART0, signal: TX, pin_signal: PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO}
+	- {pin_num: '99', peripheral: FB, signal: 'AD, 31', pin_signal: PTB20/SPI2_PCS0/FB_AD31/CMP0_OUT}
+	- {pin_num: '100', peripheral: FB, signal: 'AD, 30', pin_signal: PTB21/SPI2_SCK/FB_AD30/CMP1_OUT}
+	- {pin_num: '101', peripheral: FB, signal: 'AD, 29', pin_signal: PTB22/SPI2_SOUT/FB_AD29/CMP2_OUT}
+	- {pin_num: '102', peripheral: FB, signal: 'AD, 28', pin_signal: PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28}
+	- {pin_num: '117', peripheral: FB, signal: 'AD, 27', pin_signal: PTC12/UART4_RTS_b/FB_AD27/FTM3_FLT0}
+	- {pin_num: '118', peripheral: FB, signal: 'AD, 26', pin_signal: PTC13/UART4_CTS_b/FB_AD26}
+	- {pin_num: '119', peripheral: FB, signal: 'AD, 25', pin_signal: PTC14/UART4_RX/FB_AD25}
+	- {pin_num: '120', peripheral: FB, signal: 'AD, 24', pin_signal: PTC15/UART4_TX/FB_AD24}
+	- {pin_num: '87', peripheral: FB, signal: 'AD, 23', pin_signal: ADC1_SE12/PTB6/FB_AD23}
+	- {pin_num: '88', peripheral: FB, signal: 'AD, 22', pin_signal: ADC1_SE13/PTB7/FB_AD22}
+	- {pin_num: '89', peripheral: FB, signal: 'AD, 21', pin_signal: PTB8/UART3_RTS_b/FB_AD21}
+	- {pin_num: '90', peripheral: FB, signal: 'AD, 20', pin_signal: PTB9/SPI1_PCS1/UART3_CTS_b/FB_AD20}
+	- {pin_num: '91', peripheral: FB, signal: 'AD, 19', pin_signal: ADC1_SE14/PTB10/SPI1_PCS0/UART3_RX/FB_AD19/FTM0_FLT1}
+	- {pin_num: '92', peripheral: FB, signal: 'AD, 18', pin_signal: ADC1_SE15/PTB11/SPI1_SCK/UART3_TX/FB_AD18/FTM0_FLT2}
+	- {pin_num: '95', peripheral: FB, signal: 'AD, 17', pin_signal: PTB16/SPI1_SOUT/UART0_RX/FTM_CLKIN0/FB_AD17/EWM_IN}
+	- {pin_num: '96', peripheral: FB, signal: 'AD, 16', pin_signal: PTB17/SPI1_SIN/UART0_TX/FTM_CLKIN1/FB_AD16/EWM_OUT_b}
+	- {pin_num: '97', peripheral: FB, signal: 'AD, 15', pin_signal: PTB18/CAN0_TX/FTM2_CH0/I2S0_TX_BCLK/FB_AD15/FTM2_QD_PHA}
+	- {pin_num: '103', peripheral: FB, signal: 'AD, 14', pin_signal: ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1}
+	- {pin_num: '104', peripheral: FB, signal: 'AD, 13', pin_signal: ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0}
+	- {pin_num: '105', peripheral: FB, signal: 'AD, 12', pin_signal: ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS}
+	- {pin_num: '109', peripheral: FB, signal: 'AD, 11', pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT}
+	- {pin_num: '110', peripheral: FB, signal: 'AD, 10', pin_signal: PTC5/LLWU_P9/SPI0_SCK/LPTMR0_ALT2/I2S0_RXD0/FB_AD10/CMP0_OUT/FTM0_CH2}
+	- {pin_num: '111', peripheral: FB, signal: 'AD, 9', pin_signal: CMP0_IN0/PTC6/LLWU_P10/SPI0_SOUT/PDB0_EXTRG/I2S0_RX_BCLK/FB_AD9/I2S0_MCLK}
+	- {pin_num: '112', peripheral: FB, signal: 'AD, 8', pin_signal: CMP0_IN1/PTC7/SPI0_SIN/USB_SOF_OUT/I2S0_RX_FS/FB_AD8}
+	- {pin_num: '113', peripheral: FB, signal: 'AD, 7', pin_signal: ADC1_SE4b/CMP0_IN2/PTC8/FTM3_CH4/I2S0_MCLK/FB_AD7}
+	- {pin_num: '114', peripheral: FB, signal: 'AD, 6', pin_signal: ADC1_SE5b/CMP0_IN3/PTC9/FTM3_CH5/I2S0_RX_BCLK/FB_AD6/FTM2_FLT0}
+	- {pin_num: '115', peripheral: FB, signal: 'AD, 5', pin_signal: ADC1_SE6b/PTC10/I2C1_SCL/FTM3_CH6/I2S0_RX_FS/FB_AD5}
+	- {pin_num: '129', peripheral: FB, signal: 'AD, 4', pin_signal: PTD2/LLWU_P13/SPI0_SOUT/UART2_RX/FTM3_CH2/FB_AD4/I2C0_SCL}
+	- {pin_num: '130', peripheral: FB, signal: 'AD, 3', pin_signal: PTD3/SPI0_SIN/UART2_TX/FTM3_CH3/FB_AD3/I2C0_SDA}
+	- {pin_num: '131', peripheral: FB, signal: 'AD, 2', pin_signal: PTD4/LLWU_P14/SPI0_PCS1/UART0_RTS_b/FTM0_CH4/FB_AD2/EWM_IN/SPI1_PCS0}
+	- {pin_num: '132', peripheral: FB, signal: 'AD, 1', pin_signal: ADC0_SE6b/PTD5/SPI0_PCS2/UART0_CTS_b/UART0_COL_b/FTM0_CH5/FB_AD1/EWM_OUT_b/SPI1_SCK}
+	- {pin_num: '137', peripheral: FB, signal: 'A, 16', pin_signal: PTD8/I2C0_SCL/UART5_RX/FB_A16}
+	- {pin_num: '138', peripheral: FB, signal: 'A, 17', pin_signal: PTD9/I2C0_SDA/UART5_TX/FB_A17}
+	- {pin_num: '139', peripheral: FB, signal: 'A, 18', pin_signal: PTD10/UART5_RTS_b/FB_A18}
+	- {pin_num: '140', peripheral: FB, signal: 'A, 19', pin_signal: PTD11/SPI2_PCS0/UART5_CTS_b/SDHC0_CLKIN/FB_A19}
+	- {pin_num: '128', peripheral: FB, signal: CS0, pin_signal: ADC0_SE5b/PTD1/SPI0_SCK/UART2_CTS_b/FTM3_CH1/FB_CS0_b}
+	- {pin_num: '98', peripheral: FB, signal: OE, pin_signal: PTB19/CAN0_RX/FTM2_CH1/I2S0_TX_FS/FB_OE_b/FTM2_QD_PHB}
+	- {pin_num: '116', peripheral: FB, signal: RW, pin_signal: ADC1_SE7b/PTC11/LLWU_P11/I2C1_SDA/FTM3_CH7/I2S0_RXD1/FB_RW_b}
+	- {pin_num: '124', peripheral: FB, signal: CS4_TSIZ0_BE31_24_BLS7_0, pin_signal: PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b}
+	- {pin_num: '123', peripheral: FB, signal: CS5_TSIZ1_BE23_16_BLS15_8, pin_signal: PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b}
+	- {pin_num: '46', peripheral: UART4, signal: RX, pin_signal: ADC0_SE18/PTE25/UART4_RX/I2C0_SDA/EWM_IN}
+	- {pin_num: '45', peripheral: UART4, signal: TX, pin_signal: ADC0_SE17/PTE24/UART4_TX/I2C0_SCL/EWM_OUT_b}
+	- {pin_num: '14', peripheral: UART5, signal: RTS, pin_signal: PTE11/UART5_RTS_b/I2S0_TX_FS/FTM3_CH6}
+	- {pin_num: '13', peripheral: UART5, signal: CTS, pin_signal: PTE10/UART5_CTS_b/I2S0_TXD0/FTM3_CH5}
+	- {pin_num: '12', peripheral: UART5, signal: RX, pin_signal: PTE9/I2S0_TXD1/UART5_RX/I2S0_RX_BCLK/FTM3_CH4}
+	- {pin_num: '11', peripheral: UART5, signal: TX, pin_signal: PTE8/I2S0_RXD1/UART5_TX/I2S0_RX_FS/FTM3_CH3}
+	- {pin_num: '2', peripheral: SDHC, signal: 'DATA, 0', pin_signal: ADC1_SE5a/PTE1/LLWU_P0/SPI1_SOUT/UART1_RX/SDHC0_D0/TRACE_D3/I2C1_SCL/SPI1_SIN}
+	- {pin_num: '1', peripheral: SDHC, signal: 'DATA, 1', pin_signal: ADC1_SE4a/PTE0/SPI1_PCS1/UART1_TX/SDHC0_D1/TRACE_CLKOUT/I2C1_SDA/RTC_CLKOUT}
+	- {pin_num: '8', peripheral: SDHC, signal: 'DATA, 2', pin_signal: PTE5/SPI1_PCS2/UART3_RX/SDHC0_D2/FTM3_CH0}
+	- {pin_num: '7', peripheral: SDHC, signal: 'DATA, 3', pin_signal: PTE4/LLWU_P2/SPI1_PCS0/UART3_TX/SDHC0_D3/TRACE_D0}
+	- {pin_num: '4', peripheral: SDHC, signal: CMD, pin_signal: ADC0_DM2/ADC1_SE7a/PTE3/SPI1_SIN/UART1_RTS_b/SDHC0_CMD/TRACE_D1/SPI1_SOUT}
+	- {pin_num: '3', peripheral: SDHC, signal: DCLK, pin_signal: ADC0_DP2/ADC1_SE6a/PTE2/LLWU_P1/SPI1_SCK/UART1_CTS_b/SDHC0_DCLK/TRACE_D2}
+	- {pin_num: '24', peripheral: ADC0, signal: 'DM, 1', pin_signal: ADC0_DM1}
+	- {pin_num: '23', peripheral: ADC0, signal: 'DP, 1', pin_signal: ADC0_DP1}
+	- {pin_num: '49', peripheral: GPIOE, signal: 'GPIO, 28', pin_signal: PTE28, direction: INPUT}
+	- {pin_num: '48', peripheral: GPIOE, signal: 'GPIO, 27', pin_signal: PTE27/UART4_RTS_b, direction: INPUT}
+	- {pin_num: '47', peripheral: GPIOE, signal: 'GPIO, 26', pin_signal: PTE26/ENET_1588_CLKIN/UART4_CTS_b/RTC_CLKOUT/USB_CLKIN, direction: OUTPUT}
+	- {pin_num: '15', peripheral: GPIOE, signal: 'GPIO, 12', pin_signal: PTE12/I2S0_TX_BCLK/FTM3_CH7, direction: OUTPUT}
+	- {pin_num: '9', peripheral: GPIOE, signal: 'GPIO, 6', pin_signal: PTE6/SPI1_PCS3/UART3_CTS_b/I2S0_MCLK/FTM3_CH1/USB_SOF_OUT, direction: OUTPUT}
+	- {pin_num: '10', peripheral: GPIOE, signal: 'GPIO, 7', pin_signal: PTE7/UART3_RTS_b/I2S0_RXD0/FTM3_CH2, direction: OUTPUT}
+	- {pin_num: '127', peripheral: GPIOD, signal: 'GPIO, 0', pin_signal: PTD0/LLWU_P12/SPI0_PCS0/UART2_RTS_b/FTM3_CH0/FB_ALE/FB_CS1_b/FB_TS_b, direction: OUTPUT}
+	- {pin_num: '133', peripheral: GPIOD, signal: 'GPIO, 6', pin_signal: ADC0_SE7b/PTD6/LLWU_P15/SPI0_PCS3/UART0_RX/FTM0_CH6/FB_AD0/FTM0_FLT0/SPI1_SOUT, direction: INPUT}
+	- {pin_num: '136', peripheral: GPIOD, signal: 'GPIO, 7', pin_signal: PTD7/CMT_IRO/UART0_TX/FTM0_CH7/FTM0_FLT1/SPI1_SIN, direction: OUTPUT}
+	- {pin_num: '141', peripheral: GPIOD, signal: 'GPIO, 12', pin_signal: PTD12/SPI2_SCK/FTM3_FLT0/SDHC0_D4/FB_A20, direction: OUTPUT}
+	- {pin_num: '142', peripheral: GPIOD, signal: 'GPIO, 13', pin_signal: PTD13/SPI2_SOUT/SDHC0_D5/FB_A21, direction: OUTPUT}
+	- {pin_num: '143', peripheral: GPIOD, signal: 'GPIO, 14', pin_signal: PTD14/SPI2_SIN/SDHC0_D6/FB_A22, direction: OUTPUT}
+	- {pin_num: '144', peripheral: GPIOD, signal: 'GPIO, 15', pin_signal: PTD15/SPI2_PCS1/SDHC0_D7/FB_A23, direction: OUTPUT}
+	- {pin_num: '125', peripheral: GPIOC, signal: 'GPIO, 18', pin_signal: PTC18/UART3_RTS_b/ENET0_1588_TMR2/FB_TBST_b/FB_CS2_b/FB_BE15_8_BLS23_16_b, direction: OUTPUT}
+	- {pin_num: '126', peripheral: GPIOC, signal: 'GPIO, 19', pin_signal: PTC19/UART3_CTS_b/ENET0_1588_TMR3/FB_CS3_b/FB_BE7_0_BLS31_24_b/FB_TA_b, direction: OUTPUT}
+	- {pin_num: '85', peripheral: GPIOB, signal: 'GPIO, 4', pin_signal: ADC1_SE10/PTB4/ENET0_1588_TMR2/FTM1_FLT0, direction: OUTPUT}
+	- {pin_num: '86', peripheral: GPIOB, signal: 'GPIO, 5', pin_signal: ADC1_SE11/PTB5/ENET0_1588_TMR3/FTM2_FLT0, direction: OUTPUT}
+	- {pin_num: '54', peripheral: GPIOA, signal: 'GPIO, 4', pin_signal: PTA4/LLWU_P3/FTM0_CH1/NMI_b/EZP_CS_b, direction: OUTPUT}
+	- {pin_num: '58', peripheral: GPIOA, signal: 'GPIO, 6', pin_signal: PTA6/FTM0_CH3/CLKOUT/TRACE_CLKOUT, identifier: OPTO_INP_0, direction: INPUT}
+	- {pin_num: '59', peripheral: GPIOA, signal: 'GPIO, 7', pin_signal: ADC0_SE10/PTA7/FTM0_CH4/TRACE_D3, identifier: OPTO_INP_1, direction: INPUT}
+	- {pin_num: '60', peripheral: GPIOA, signal: 'GPIO, 8', pin_signal: ADC0_SE11/PTA8/FTM1_CH0/FTM1_QD_PHA/TRACE_D2, identifier: OPTO_INP_2, direction: INPUT}
+	- {pin_num: '79', peripheral: GPIOA, signal: 'GPIO, 28', pin_signal: PTA28/MII0_TXER/FB_A25, direction: OUTPUT}
+	- {pin_num: '83', peripheral: I2C0, signal: SCL, pin_signal: ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/ENET0_1588_TMR0/FTM0_FLT3}
+	- {pin_num: '84', peripheral: I2C0, signal: SDA, pin_signal: ADC0_SE13/PTB3/I2C0_SDA/UART0_CTS_b/UART0_COL_b/ENET0_1588_TMR1/FTM0_FLT0}
+	- {pin_num: '106', peripheral: GPIOC, signal: 'GPIO, 3', pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK, direction: INPUT}
+	- {pin_num: '50', peripheral: JTAG, signal: JTAG_TCLK_SWD_CLK, pin_signal: PTA0/UART0_CTS_b/UART0_COL_b/FTM0_CH5/JTAG_TCLK/SWD_CLK/EZP_CLK}
+	- {pin_num: '53', peripheral: JTAG, signal: JTAG_TMS_SWD_DIO, pin_signal: PTA3/UART0_RTS_b/FTM0_CH0/JTAG_TMS/SWD_DIO}
+	- {pin_num: '72', peripheral: OSC, signal: EXTAL0, pin_signal: EXTAL0/PTA18/FTM0_FLT2/FTM_CLKIN0}
+	- {pin_num: '73', peripheral: OSC, signal: XTAL0, pin_signal: XTAL0/PTA19/FTM1_FLT0/FTM_CLKIN1/LPTMR0_ALT1}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -308,312 +361,319 @@ BOARD_InitPins:
 
 void oldPinInit(void){
 
-    /* PORTA0 (pin 50) is configured as JTAG_TCLK */
-    PORT_SetPinMux(PORTA, 0U, kPORT_MuxAlt7);
+		/* PORTA0 (pin 50) is configured as JTAG_TCLK */
+		PORT_SetPinMux(PORTA, 0U, kPORT_MuxAlt7);
 
-    /* PORTA1 (pin 51) is configured as UART0_RX */
-    PORT_SetPinMux(PORTA, 1U, kPORT_MuxAlt2);
+		/* PORTA1 (pin 51) is configured as UART0_RX */
+		PORT_SetPinMux(PORTA, 1U, kPORT_MuxAlt2);
 
-    /* PORTA10 (pin 62) is configured as MII0_RXD2 */
-    PORT_SetPinMux(PORTA, 10U, kPORT_MuxAlt4);
+		/* PORTA10 (pin 62) is configured as MII0_RXD2 */
+		PORT_SetPinMux(PORTA, 10U, kPORT_MuxAlt4);
 
-    /* PORTA11 (pin 63) is configured as MII0_RXCLK */
-    PORT_SetPinMux(PORTA, 11U, kPORT_MuxAlt4);
+		/* PORTA11 (pin 63) is configured as MII0_RXCLK */
+		PORT_SetPinMux(PORTA, 11U, kPORT_MuxAlt4);
 
-    /* PORTA12 (pin 64) is configured as MII0_RXD1 */
-    PORT_SetPinMux(PORTA, 12U, kPORT_MuxAlt4);
+		/* PORTA12 (pin 64) is configured as MII0_RXD1 */
+		PORT_SetPinMux(PORTA, 12U, kPORT_MuxAlt4);
 
-    /* PORTA13 (pin 65) is configured as MII0_RXD0 */
-    PORT_SetPinMux(PORTA, 13U, kPORT_MuxAlt4);
+		/* PORTA13 (pin 65) is configured as MII0_RXD0 */
+		PORT_SetPinMux(PORTA, 13U, kPORT_MuxAlt4);
 
-    /* PORTA14 (pin 66) is configured as MII0_RXDV */
-    PORT_SetPinMux(PORTA, 14U, kPORT_MuxAlt4);
+		/* PORTA14 (pin 66) is configured as MII0_RXDV */
+		PORT_SetPinMux(PORTA, 14U, kPORT_MuxAlt4);
 
-    /* PORTA15 (pin 67) is configured as MII0_TXEN */
-    PORT_SetPinMux(PORTA, 15U, kPORT_MuxAlt4);
+		/* PORTA15 (pin 67) is configured as MII0_TXEN */
+		PORT_SetPinMux(PORTA, 15U, kPORT_MuxAlt4);
 
-    /* PORTA16 (pin 68) is configured as MII0_TXD0 */
-    PORT_SetPinMux(PORTA, 16U, kPORT_MuxAlt4);
+		/* PORTA16 (pin 68) is configured as MII0_TXD0 */
+		PORT_SetPinMux(PORTA, 16U, kPORT_MuxAlt4);
 
-    /* PORTA17 (pin 69) is configured as MII0_TXD1 */
-    PORT_SetPinMux(PORTA, 17U, kPORT_MuxAlt4);
+		/* PORTA17 (pin 69) is configured as MII0_TXD1 */
+		PORT_SetPinMux(PORTA, 17U, kPORT_MuxAlt4);
 
-    /* PORTA18 (pin 72) is configured as EXTAL0 */
-    PORT_SetPinMux(PORTA, 18U, kPORT_PinDisabledOrAnalog);
+		/* PORTA18 (pin 72) is configured as EXTAL0 */
+		PORT_SetPinMux(PORTA, 18U, kPORT_PinDisabledOrAnalog);
 
-    /* PORTA19 (pin 73) is configured as XTAL0 */
-    PORT_SetPinMux(PORTA, 19U, kPORT_PinDisabledOrAnalog);
+		/* PORTA19 (pin 73) is configured as XTAL0 */
+		PORT_SetPinMux(PORTA, 19U, kPORT_PinDisabledOrAnalog);
 
-    /* PORTA2 (pin 52) is configured as UART0_TX */
-    PORT_SetPinMux(PORTA, 2U, kPORT_MuxAlt2);
+		/* PORTA2 (pin 52) is configured as UART0_TX */
 
-    /* PORTA24 (pin 75) is configured as MII0_TXD2 */
-    PORT_SetPinMux(PORTA, 24U, kPORT_MuxAlt4);
+		PORT_SetPinMux(PORTA, 2U, kPORT_MuxAlt2);
 
-    /* PORTA25 (pin 76) is configured as MII0_TXCLK */
-    PORT_SetPinMux(PORTA, 25U, kPORT_MuxAlt4);
+		/* PORTA24 (pin 75) is configured as MII0_TXD2 */
+		PORT_SetPinMux(PORTA, 24U, kPORT_MuxAlt4);
 
-    /* PORTA26 (pin 77) is configured as MII0_TXD3 */
-    PORT_SetPinMux(PORTA, 26U, kPORT_MuxAlt4);
+		/* PORTA25 (pin 76) is configured as MII0_TXCLK */
+		PORT_SetPinMux(PORTA, 25U, kPORT_MuxAlt4);
 
-    /* PORTA27 (pin 78) is configured as MII0_CRS */
-    PORT_SetPinMux(PORTA, 27U, kPORT_MuxAlt4);
+		/* PORTA26 (pin 77) is configured as MII0_TXD3 */
+		PORT_SetPinMux(PORTA, 26U, kPORT_MuxAlt4);
 
-    /* PORTA28 (pin 79) is configured as PTA28 */
-    PORT_SetPinMux(BOARD_INITPINS_unused_1_PORT, BOARD_INITPINS_unused_1_PIN, kPORT_MuxAsGpio);
+		/* PORTA27 (pin 78) is configured as MII0_CRS */
+		PORT_SetPinMux(PORTA, 27U, kPORT_MuxAlt4);
 
-    /* PORTA29 (pin 80) is configured as MII0_COL */
-    PORT_SetPinMux(PORTA, 29U, kPORT_MuxAlt4);
+		/* PORTA28 (pin 79) is configured as PTA28 */
+		PORT_SetPinMux(BOARD_INITPINS_unused_1_PORT, BOARD_INITPINS_unused_1_PIN, kPORT_MuxAsGpio);
 
-    /* PORTA3 (pin 53) is configured as JTAG_TMS */
-    PORT_SetPinMux(PORTA, 3U, kPORT_MuxAlt7);
+		/* PORTA29 (pin 80) is configured as MII0_COL */
+		PORT_SetPinMux(PORTA, 29U, kPORT_MuxAlt4);
 
-    /* PORTA4 (pin 54) is configured as PTA4 */
-    PORT_SetPinMux(BOARD_INITPINS_ETH_PHY_RESET_PORT, BOARD_INITPINS_ETH_PHY_RESET_PIN, kPORT_MuxAsGpio);
+		/* PORTA3 (pin 53) is configured as JTAG_TMS */
+		PORT_SetPinMux(PORTA, 3U, kPORT_MuxAlt7);
 
-    /* PORTA5 (pin 55) is configured as MII0_RXER */
-    PORT_SetPinMux(PORTA, 5U, kPORT_MuxAlt4);
+		/* PORTA4 (pin 54) is configured as PTA4 */
+		PORT_SetPinMux(BOARD_INITPINS_ETH_PHY_RESET_PORT, BOARD_INITPINS_ETH_PHY_RESET_PIN, kPORT_MuxAsGpio);
 
-    /* PORTA6 (pin 58) is configured as PTA6 */
-    PORT_SetPinMux(BOARD_INITPINS_OPTO_INP_0_PORT, BOARD_INITPINS_OPTO_INP_0_PIN, kPORT_MuxAsGpio);
+		/* PORTA5 (pin 55) is configured as MII0_RXER */
+		PORT_SetPinMux(PORTA, 5U, kPORT_MuxAlt4);
 
-    /* PORTA7 (pin 59) is configured as PTA7 */
-    PORT_SetPinMux(BOARD_INITPINS_OPTO_INP_1_PORT, BOARD_INITPINS_OPTO_INP_1_PIN, kPORT_MuxAsGpio);
+		/* PORTA6 (pin 58) is configured as PTA6 */
+		PORT_SetPinMux(BOARD_INITPINS_OPTO_INP_0_PORT, BOARD_INITPINS_OPTO_INP_0_PIN, kPORT_MuxAsGpio);
 
-    /* PORTA8 (pin 60) is configured as PTA8 */
-    PORT_SetPinMux(BOARD_INITPINS_OPTO_INP_2_PORT, BOARD_INITPINS_OPTO_INP_2_PIN, kPORT_MuxAsGpio);
+		/* PORTA7 (pin 59) is configured as PTA7 */
+		PORT_SetPinMux(BOARD_INITPINS_OPTO_INP_1_PORT, BOARD_INITPINS_OPTO_INP_1_PIN, kPORT_MuxAsGpio);
 
-    /* PORTA9 (pin 61) is configured as MII0_RXD3 */
-    PORT_SetPinMux(PORTA, 9U, kPORT_MuxAlt4);
+		/* PORTA8 (pin 60) is configured as PTA8 */
+		PORT_SetPinMux(BOARD_INITPINS_OPTO_INP_2_PORT, BOARD_INITPINS_OPTO_INP_2_PIN, kPORT_MuxAsGpio);
 
-    /* PORTB0 (pin 81) is configured as MII0_MDIO */
-    PORT_SetPinMux(PORTB, 0U, kPORT_MuxAlt4);
+		/* PORTA9 (pin 61) is configured as MII0_RXD3 */
+		PORT_SetPinMux(PORTA, 9U, kPORT_MuxAlt4);
 
-    /* PORTB1 (pin 82) is configured as MII0_MDC */
-    PORT_SetPinMux(PORTB, 1U, kPORT_MuxAlt4);
+		/* PORTB0 (pin 81) is configured as MII0_MDIO */
+		PORT_SetPinMux(PORTB, 0U, kPORT_MuxAlt4);
 
-    /* PORTB10 (pin 91) is configured as FB_AD19 */
-    PORT_SetPinMux(PORTB, 10U, kPORT_MuxAlt5);
+		/* PORTB1 (pin 82) is configured as MII0_MDC */
+		PORT_SetPinMux(PORTB, 1U, kPORT_MuxAlt4);
 
-    /* PORTB11 (pin 92) is configured as FB_AD18 */
-    PORT_SetPinMux(PORTB, 11U, kPORT_MuxAlt5);
+		/* PORTB10 (pin 91) is configured as FB_AD19 */
+		PORT_SetPinMux(PORTB, 10U, kPORT_MuxAlt5);
 
-    /* PORTB16 (pin 95) is configured as FB_AD17 */
-    PORT_SetPinMux(PORTB, 16U, kPORT_MuxAlt5);
+		/* PORTB11 (pin 92) is configured as FB_AD18 */
+		PORT_SetPinMux(PORTB, 11U, kPORT_MuxAlt5);
 
-    /* PORTB17 (pin 96) is configured as FB_AD16 */
-    PORT_SetPinMux(PORTB, 17U, kPORT_MuxAlt5);
+		/* PORTB16 (pin 95) is configured as FB_AD17 */
+		PORT_SetPinMux(PORTB, 16U, kPORT_MuxAlt5);
 
-    /* PORTB18 (pin 97) is configured as FB_AD15 */
-    PORT_SetPinMux(PORTB, 18U, kPORT_MuxAlt5);
+		/* PORTB17 (pin 96) is configured as FB_AD16 */
+		PORT_SetPinMux(PORTB, 17U, kPORT_MuxAlt5);
 
-    /* PORTB19 (pin 98) is configured as FB_OE_b */
-    PORT_SetPinMux(PORTB, 19U, kPORT_MuxAlt5);
+		/* PORTB18 (pin 97) is configured as FB_AD15 */
+		PORT_SetPinMux(PORTB, 18U, kPORT_MuxAlt5);
 
-    /* PORTB2 (pin 83) is configured as I2C0_SCL */
-    PORT_SetPinMux(PORTB, 2U, kPORT_MuxAlt2);
+		/* PORTB19 (pin 98) is configured as FB_OE_b */
+		PORT_SetPinMux(PORTB, 19U, kPORT_MuxAlt5);
 
-    /* PORTB20 (pin 99) is configured as FB_AD31 */
-    PORT_SetPinMux(PORTB, 20U, kPORT_MuxAlt5);
+		/* PORTB2 (pin 83) is configured as I2C0_SCL */
+		PORT_SetPinMux(PORTB, 2U, kPORT_MuxAlt2);
 
-    /* PORTB21 (pin 100) is configured as FB_AD30 */
-    PORT_SetPinMux(PORTB, 21U, kPORT_MuxAlt5);
+		/* PORTB20 (pin 99) is configured as FB_AD31 */
+		PORT_SetPinMux(PORTB, 20U, kPORT_MuxAlt5);
 
-    /* PORTB22 (pin 101) is configured as FB_AD29 */
-    PORT_SetPinMux(PORTB, 22U, kPORT_MuxAlt5);
+		/* PORTB21 (pin 100) is configured as FB_AD30 */
+		PORT_SetPinMux(PORTB, 21U, kPORT_MuxAlt5);
 
-    /* PORTB23 (pin 102) is configured as FB_AD28 */
-    PORT_SetPinMux(PORTB, 23U, kPORT_MuxAlt5);
+		/* PORTB22 (pin 101) is configured as FB_AD29 */
+		PORT_SetPinMux(PORTB, 22U, kPORT_MuxAlt5);
 
-    /* PORTB3 (pin 84) is configured as I2C0_SDA */
-    PORT_SetPinMux(PORTB, 3U, kPORT_MuxAlt2);
+		/* PORTB23 (pin 102) is configured as FB_AD28 */
+		PORT_SetPinMux(PORTB, 23U, kPORT_MuxAlt5);
 
-    /* PORTB4 (pin 85) is configured as PTB4 */
-    PORT_SetPinMux(BOARD_INITPINS_RS485_RE_1_PORT, BOARD_INITPINS_RS485_RE_1_PIN, kPORT_MuxAsGpio);
+		/* PORTB3 (pin 84) is configured as I2C0_SDA */
+		PORT_SetPinMux(PORTB, 3U, kPORT_MuxAlt2);
 
-    /* PORTB5 (pin 86) is configured as PTB5 */
-    PORT_SetPinMux(BOARD_INITPINS_RS485_DE_1_PORT, BOARD_INITPINS_RS485_DE_1_PIN, kPORT_MuxAsGpio);
+		/* PORTB4 (pin 85) is configured as PTB4 */
+		PORT_SetPinMux(BOARD_INITPINS_RS485_RE_1_PORT, BOARD_INITPINS_RS485_RE_1_PIN, kPORT_MuxAsGpio);
 
-    /* PORTB6 (pin 87) is configured as FB_AD23 */
-    PORT_SetPinMux(PORTB, 6U, kPORT_MuxAlt5);
+		/* PORTB5 (pin 86) is configured as PTB5 */
+		PORT_SetPinMux(BOARD_INITPINS_RS485_DE_1_PORT, BOARD_INITPINS_RS485_DE_1_PIN, kPORT_MuxAsGpio);
 
-    /* PORTB7 (pin 88) is configured as FB_AD22 */
-    PORT_SetPinMux(PORTB, 7U, kPORT_MuxAlt5);
+		/* PORTB6 (pin 87) is configured as FB_AD23 */
+		PORT_SetPinMux(PORTB, 6U, kPORT_MuxAlt5);
 
-    /* PORTB8 (pin 89) is configured as FB_AD21 */
-    PORT_SetPinMux(PORTB, 8U, kPORT_MuxAlt5);
+		/* PORTB7 (pin 88) is configured as FB_AD22 */
+		PORT_SetPinMux(PORTB, 7U, kPORT_MuxAlt5);
 
-    /* PORTB9 (pin 90) is configured as FB_AD20 */
-    PORT_SetPinMux(PORTB, 9U, kPORT_MuxAlt5);
+		/* PORTB8 (pin 89) is configured as FB_AD21 */
+		PORT_SetPinMux(PORTB, 8U, kPORT_MuxAlt5);
 
-    /* PORTC0 (pin 103) is configured as FB_AD14 */
-    PORT_SetPinMux(PORTC, 0U, kPORT_MuxAlt5);
+		/* PORTB9 (pin 90) is configured as FB_AD20 */
+		PORT_SetPinMux(PORTB, 9U, kPORT_MuxAlt5);
 
-    /* PORTC1 (pin 104) is configured as FB_AD13 */
-    PORT_SetPinMux(PORTC, 1U, kPORT_MuxAlt5);
+		/* PORTC0 (pin 103) is configured as FB_AD14 */
+		PORT_SetPinMux(PORTC, 0U, kPORT_MuxAlt5);
 
-    /* PORTC10 (pin 115) is configured as FB_AD5 */
-    PORT_SetPinMux(PORTC, 10U, kPORT_MuxAlt5);
+		/* PORTC1 (pin 104) is configured as FB_AD13 */
+		PORT_SetPinMux(PORTC, 1U, kPORT_MuxAlt5);
 
-    /* PORTC11 (pin 116) is configured as FB_RW_b */
-    PORT_SetPinMux(PORTC, 11U, kPORT_MuxAlt5);
+		/* PORTC10 (pin 115) is configured as FB_AD5 */
+		PORT_SetPinMux(PORTC, 10U, kPORT_MuxAlt5);
 
-    /* PORTC12 (pin 117) is configured as FB_AD27 */
-    PORT_SetPinMux(PORTC, 12U, kPORT_MuxAlt5);
+		/* PORTC11 (pin 116) is configured as FB_RW_b */
+		PORT_SetPinMux(PORTC, 11U, kPORT_MuxAlt5);
 
-    /* PORTC13 (pin 118) is configured as FB_AD26 */
-    PORT_SetPinMux(PORTC, 13U, kPORT_MuxAlt5);
+		/* PORTC12 (pin 117) is configured as FB_AD27 */
+		PORT_SetPinMux(PORTC, 12U, kPORT_MuxAlt5);
 
-    /* PORTC14 (pin 119) is configured as FB_AD25 */
-    PORT_SetPinMux(PORTC, 14U, kPORT_MuxAlt5);
+		/* PORTC13 (pin 118) is configured as FB_AD26 */
+		PORT_SetPinMux(PORTC, 13U, kPORT_MuxAlt5);
 
-    /* PORTC15 (pin 120) is configured as FB_AD24 */
-    PORT_SetPinMux(PORTC, 15U, kPORT_MuxAlt5);
+		/* PORTC14 (pin 119) is configured as FB_AD25 */
+		PORT_SetPinMux(PORTC, 14U, kPORT_MuxAlt5);
 
-    /* PORTC16 (pin 123) is configured as FB_CS5_b */
-    PORT_SetPinMux(PORTC, 16U, kPORT_MuxAlt5);
+		/* PORTC15 (pin 120) is configured as FB_AD24 */
+		PORT_SetPinMux(PORTC, 15U, kPORT_MuxAlt5);
 
-    /* PORTC17 (pin 124) is configured as FB_CS4_b */
-    PORT_SetPinMux(PORTC, 17U, kPORT_MuxAlt5);
+		/* PORTC16 (pin 123) is configured as FB_CS5_b */
+		PORT_SetPinMux(PORTC, 16U, kPORT_MuxAlt5);
 
-    /* PORTC18 (pin 125) is configured as PTC18 */
-    PORT_SetPinMux(BOARD_INITPINS_RS485_RE_2_PORT, BOARD_INITPINS_RS485_RE_2_PIN, kPORT_MuxAsGpio);
+		/* PORTC17 (pin 124) is configured as FB_CS4_b */
+		PORT_SetPinMux(PORTC, 17U, kPORT_MuxAlt5);
 
-    /* PORTC19 (pin 126) is configured as PTC19 */
-    PORT_SetPinMux(BOARD_INITPINS_RS485_DE_2_PORT, BOARD_INITPINS_RS485_DE_2_PIN, kPORT_MuxAsGpio);
+		/* PORTC18 (pin 125) is configured as PTC18 */
+		PORT_SetPinMux(BOARD_INITPINS_RS485_RE_2_PORT, BOARD_INITPINS_RS485_RE_2_PIN, kPORT_MuxAsGpio);
 
-    /* PORTC2 (pin 105) is configured as FB_AD12 */
-    PORT_SetPinMux(PORTC, 2U, kPORT_MuxAlt5);
+		/* PORTC19 (pin 126) is configured as PTC19 */
+		PORT_SetPinMux(BOARD_INITPINS_RS485_DE_2_PORT, BOARD_INITPINS_RS485_DE_2_PIN, kPORT_MuxAsGpio);
 
-    /* PORTC3 (pin 106) is configured as PTC3 */
-    PORT_SetPinMux(BOARD_INITPINS_SDHC_CD_PORT, BOARD_INITPINS_SDHC_CD_PIN, kPORT_MuxAsGpio);
+		/* PORTC2 (pin 105) is configured as FB_AD12 */
+		PORT_SetPinMux(PORTC, 2U, kPORT_MuxAlt5);
 
-    /* PORTC4 (pin 109) is configured as FB_AD11 */
-    PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt5);
+		/* PORTC3 (pin 106) is configured as PTC3 */
+		PORT_SetPinMux(BOARD_INITPINS_SDHC_CD_PORT, BOARD_INITPINS_SDHC_CD_PIN, kPORT_MuxAsGpio);
 
-    /* PORTC5 (pin 110) is configured as FB_AD10 */
-    PORT_SetPinMux(PORTC, 5U, kPORT_MuxAlt5);
+		/* PORTC4 (pin 109) is configured as FB_AD11 */
+		PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt5);
 
-    /* PORTC6 (pin 111) is configured as FB_AD9 */
-    PORT_SetPinMux(PORTC, 6U, kPORT_MuxAlt5);
+		/* PORTC5 (pin 110) is configured as FB_AD10 */
+		PORT_SetPinMux(PORTC, 5U, kPORT_MuxAlt5);
 
-    /* PORTC7 (pin 112) is configured as FB_AD8 */
-    PORT_SetPinMux(PORTC, 7U, kPORT_MuxAlt5);
+		/* PORTC6 (pin 111) is configured as FB_AD9 */
+		PORT_SetPinMux(PORTC, 6U, kPORT_MuxAlt5);
 
-    /* PORTC8 (pin 113) is configured as FB_AD7 */
-    PORT_SetPinMux(PORTC, 8U, kPORT_MuxAlt5);
+		/* PORTC7 (pin 112) is configured as FB_AD8 */
+		PORT_SetPinMux(PORTC, 7U, kPORT_MuxAlt5);
 
-    /* PORTC9 (pin 114) is configured as FB_AD6 */
-    PORT_SetPinMux(PORTC, 9U, kPORT_MuxAlt5);
+		/* PORTC8 (pin 113) is configured as FB_AD7 */
+		PORT_SetPinMux(PORTC, 8U, kPORT_MuxAlt5);
 
-    /* PORTD0 (pin 127) is configured as PTD0 */
-    PORT_SetPinMux(BOARD_INITPINS_unused_0_PORT, BOARD_INITPINS_unused_0_PIN, kPORT_MuxAsGpio);
+		/* PORTC9 (pin 114) is configured as FB_AD6 */
+		PORT_SetPinMux(PORTC, 9U, kPORT_MuxAlt5);
 
-    /* PORTD1 (pin 128) is configured as FB_CS0_b */
-    PORT_SetPinMux(PORTD, 1U, kPORT_MuxAlt5);
+		/* PORTD0 (pin 127) is configured as PTD0 */
+		PORT_SetPinMux(BOARD_INITPINS_unused_0_PORT, BOARD_INITPINS_unused_0_PIN, kPORT_MuxAsGpio);
 
-    /* PORTD10 (pin 139) is configured as FB_A18 */
-    PORT_SetPinMux(PORTD, 10U, kPORT_MuxAlt6);
+		/* PORTD1 (pin 128) is configured as FB_CS0_b */
+		PORT_SetPinMux(PORTD, 1U, kPORT_MuxAlt5);
 
-    /* PORTD11 (pin 140) is configured as FB_A19 */
-    PORT_SetPinMux(PORTD, 11U, kPORT_MuxAlt6);
+		/* PORTD10 (pin 139) is configured as FB_A18 */
+		PORT_SetPinMux(PORTD, 10U, kPORT_MuxAlt6);
 
-    /* PORTD12 (pin 141) is configured as PTD12 */
-    PORT_SetPinMux(BOARD_INITPINS_LED_STATUS_G_PORT, BOARD_INITPINS_LED_STATUS_G_PIN, kPORT_MuxAsGpio);
+		/* PORTD11 (pin 140) is configured as FB_A19 */
+		PORT_SetPinMux(PORTD, 11U, kPORT_MuxAlt6);
 
-    /* PORTD13 (pin 142) is configured as PTD13 */
-    PORT_SetPinMux(BOARD_INITPINS_LED_STATUS_R_PORT, BOARD_INITPINS_LED_STATUS_R_PIN, kPORT_MuxAsGpio);
+		/* PORTD12 (pin 141) is configured as PTD12 */
+		PORT_SetPinMux(BOARD_INITPINS_LED_STATUS_G_PORT, BOARD_INITPINS_LED_STATUS_G_PIN, kPORT_MuxAsGpio);
 
-    /* PORTD14 (pin 143) is configured as PTD14 */
-    PORT_SetPinMux(BOARD_INITPINS_LED_RS485_PORT, BOARD_INITPINS_LED_RS485_PIN, kPORT_MuxAsGpio);
+		/* PORTD13 (pin 142) is configured as PTD13 */
+		PORT_SetPinMux(BOARD_INITPINS_LED_STATUS_R_PORT, BOARD_INITPINS_LED_STATUS_R_PIN, kPORT_MuxAsGpio);
 
-    /* PORTD15 (pin 144) is configured as PTD15 */
-    PORT_SetPinMux(BOARD_INITPINS_LED_SENSORS_PORT, BOARD_INITPINS_LED_SENSORS_PIN, kPORT_MuxAsGpio);
+		/* PORTD14 (pin 143) is configured as PTD14 */
+		PORT_SetPinMux(BOARD_INITPINS_LED_RS485_PORT, BOARD_INITPINS_LED_RS485_PIN, kPORT_MuxAsGpio);
 
-    /* PORTD2 (pin 129) is configured as FB_AD4 */
-    PORT_SetPinMux(PORTD, 2U, kPORT_MuxAlt5);
+		/* PORTD15 (pin 144) is configured as PTD15 */
+		PORT_SetPinMux(BOARD_INITPINS_LED_SENSORS_PORT, BOARD_INITPINS_LED_SENSORS_PIN, kPORT_MuxAsGpio);
 
-    /* PORTD3 (pin 130) is configured as FB_AD3 */
-    PORT_SetPinMux(PORTD, 3U, kPORT_MuxAlt5);
+		/* PORTD2 (pin 129) is configured as FB_AD4 */
+		PORT_SetPinMux(PORTD, 2U, kPORT_MuxAlt5);
 
-    /* PORTD4 (pin 131) is configured as FB_AD2 */
-    PORT_SetPinMux(PORTD, 4U, kPORT_MuxAlt5);
+		/* PORTD3 (pin 130) is configured as FB_AD3 */
+		PORT_SetPinMux(PORTD, 3U, kPORT_MuxAlt5);
 
-    /* PORTD5 (pin 132) is configured as FB_AD1 */
-    PORT_SetPinMux(PORTD, 5U, kPORT_MuxAlt5);
+		/* PORTD4 (pin 131) is configured as FB_AD2 */
+		PORT_SetPinMux(PORTD, 4U, kPORT_MuxAlt5);
 
-    /* PORTD6 (pin 133) is configured as PTD6 */
-    PORT_SetPinMux(BOARD_INITPINS_BUTTON_PORT, BOARD_INITPINS_BUTTON_PIN, kPORT_MuxAsGpio);
+		/* PORTD5 (pin 132) is configured as FB_AD1 */
+		PORT_SetPinMux(PORTD, 5U, kPORT_MuxAlt5);
 
-    /* PORTD7 (pin 136) is configured as PTD7 */
-    PORT_SetPinMux(BOARD_INITPINS_RELAY_PORT, BOARD_INITPINS_RELAY_PIN, kPORT_MuxAsGpio);
+		/* PORTD6 (pin 133) is configured as PTD6 */
+		PORT_SetPinMux(BOARD_INITPINS_BUTTON_PORT, BOARD_INITPINS_BUTTON_PIN, kPORT_MuxAsGpio);
 
-    /* PORTD8 (pin 137) is configured as FB_A16 */
-    PORT_SetPinMux(PORTD, 8U, kPORT_MuxAlt6);
+		/* PORTD7 (pin 136) is configured as PTD7 */
+		PORT_SetPinMux(BOARD_INITPINS_RELAY_PORT, BOARD_INITPINS_RELAY_PIN, kPORT_MuxAsGpio);
 
-    /* PORTD9 (pin 138) is configured as FB_A17 */
-    PORT_SetPinMux(PORTD, 9U, kPORT_MuxAlt6);
+		/* PORTD8 (pin 137) is configured as FB_A16 */
+		PORT_SetPinMux(PORTD, 8U, kPORT_MuxAlt6);
 
-    /* PORTE0 (pin 1) is configured as SDHC0_D1 */
-    PORT_SetPinMux(PORTE, 0U, kPORT_MuxAlt4);
+		/* PORTD9 (pin 138) is configured as FB_A17 */
+		PORT_SetPinMux(PORTD, 9U, kPORT_MuxAlt6);
 
-    /* PORTE1 (pin 2) is configured as SDHC0_D0 */
-    PORT_SetPinMux(PORTE, 1U, kPORT_MuxAlt4);
+		/* PORTE0 (pin 1) is configured as SDHC0_D1 */
+		PORT_SetPinMux(PORTE, 0U, kPORT_MuxAlt4);
 
-    /* PORTE10 (pin 13) is configured as UART5_CTS_b */
-    PORT_SetPinMux(PORTE, 10U, kPORT_MuxAlt3);
+		/* PORTE1 (pin 2) is configured as SDHC0_D0 */
+		PORT_SetPinMux(PORTE, 1U, kPORT_MuxAlt4);
 
-    /* PORTE11 (pin 14) is configured as UART5_RTS_b */
-    PORT_SetPinMux(PORTE, 11U, kPORT_MuxAlt3);
+		/* PORTE10 (pin 13) is configured as UART5_CTS_b */
+		PORT_SetPinMux(PORTE, 10U, kPORT_MuxAlt3);
 
-    /* PORTE12 (pin 15) is configured as PTE12 */
-    PORT_SetPinMux(BOARD_INITPINS_RS232_SHTDWN_PORT, BOARD_INITPINS_RS232_SHTDWN_PIN, kPORT_MuxAsGpio);
+		/* PORTE11 (pin 14) is configured as UART5_RTS_b */
+		PORT_SetPinMux(PORTE, 11U, kPORT_MuxAlt3);
 
-    /* PORTE2 (pin 3) is configured as SDHC0_DCLK */
-    PORT_SetPinMux(PORTE, 2U, kPORT_MuxAlt4);
+		/* PORTE12 (pin 15) is configured as PTE12 */
+		PORT_SetPinMux(BOARD_INITPINS_RS232_SHTDWN_PORT, BOARD_INITPINS_RS232_SHTDWN_PIN, kPORT_MuxAsGpio);
 
-    /* PORTE24 (pin 45) is configured as UART4_TX */
-    PORT_SetPinMux(PORTE, 24U, kPORT_MuxAlt3);
+		/* PORTE2 (pin 3) is configured as SDHC0_DCLK */
+		PORT_SetPinMux(PORTE, 2U, kPORT_MuxAlt4);
 
-    /* PORTE25 (pin 46) is configured as UART4_RX */
-    PORT_SetPinMux(PORTE, 25U, kPORT_MuxAlt3);
+		/* PORTE24 (pin 45) is configured as UART4_TX */
+		PORT_SetPinMux(PORTE, 24U, kPORT_MuxAlt3);
 
-    /* PORTE26 (pin 47) is configured as PTE26 */
-    PORT_SetPinMux(BOARD_INITPINS_RS232_DTR_PORT, BOARD_INITPINS_RS232_DTR_PIN, kPORT_MuxAsGpio);
+		/* PORTE25 (pin 46) is configured as UART4_RX */
+		PORT_SetPinMux(PORTE, 25U, kPORT_MuxAlt3);
 
-    /* PORTE27 (pin 48) is configured as PTE27 */
-    PORT_SetPinMux(BOARD_INITPINS_RS232_RI_PORT, BOARD_INITPINS_RS232_RI_PIN, kPORT_MuxAsGpio);
+		/* PORTE26 (pin 47) is configured as PTE26 */
+		PORT_SetPinMux(BOARD_INITPINS_RS232_DTR_PORT, BOARD_INITPINS_RS232_DTR_PIN, kPORT_MuxAsGpio);
 
-    /* PORTE28 (pin 49) is configured as PTE28 */
-    PORT_SetPinMux(BOARD_INITPINS_RS232_STATUS_PORT, BOARD_INITPINS_RS232_STATUS_PIN, kPORT_MuxAsGpio);
+		/* PORTE27 (pin 48) is configured as PTE27 */
+		PORT_SetPinMux(BOARD_INITPINS_RS232_RI_PORT, BOARD_INITPINS_RS232_RI_PIN, kPORT_MuxAsGpio);
 
-    /* PORTE3 (pin 4) is configured as SDHC0_CMD */
-    PORT_SetPinMux(PORTE, 3U, kPORT_MuxAlt4);
+		/* PORTE28 (pin 49) is configured as PTE28 */
+		PORT_SetPinMux(BOARD_INITPINS_RS232_STATUS_PORT, BOARD_INITPINS_RS232_STATUS_PIN, kPORT_MuxAsGpio);
 
-    /* PORTE4 (pin 7) is configured as SDHC0_D3 */
-    PORT_SetPinMux(PORTE, 4U, kPORT_MuxAlt4);
+		/* PORTE3 (pin 4) is configured as SDHC0_CMD */
+		PORT_SetPinMux(PORTE, 3U, kPORT_MuxAlt4);
 
-    /* PORTE5 (pin 8) is configured as SDHC0_D2 */
-    PORT_SetPinMux(PORTE, 5U, kPORT_MuxAlt4);
+		/* PORTE4 (pin 7) is configured as SDHC0_D3 */
+		PORT_SetPinMux(PORTE, 4U, kPORT_MuxAlt4);
 
-    /* PORTE6 (pin 9) is configured as PTE6 */
-    PORT_SetPinMux(BOARD_INITPINS_RS485_RE_PORT, BOARD_INITPINS_RS485_RE_PIN, kPORT_MuxAsGpio);
+		/* PORTE5 (pin 8) is configured as SDHC0_D2 */
+		PORT_SetPinMux(PORTE, 5U, kPORT_MuxAlt4);
 
-    /* PORTE7 (pin 10) is configured as PTE7 */
-    PORT_SetPinMux(BOARD_INITPINS_RS485_DE_PORT, BOARD_INITPINS_RS485_DE_PIN, kPORT_MuxAsGpio);
+		/* PORTE6 (pin 9) is configured as PTE6 */
+		PORT_SetPinMux(BOARD_INITPINS_RS485_RE_PORT, BOARD_INITPINS_RS485_RE_PIN, kPORT_MuxAsGpio);
 
-    /* PORTE8 (pin 11) is configured as UART5_TX */
-    PORT_SetPinMux(PORTE, 8U, kPORT_MuxAlt3);
+		/* PORTE7 (pin 10) is configured as PTE7 */
+		PORT_SetPinMux(BOARD_INITPINS_RS485_DE_PORT, BOARD_INITPINS_RS485_DE_PIN, kPORT_MuxAsGpio);
 
-    /* PORTE9 (pin 12) is configured as UART5_RX */
-    PORT_SetPinMux(PORTE, 9U, kPORT_MuxAlt3);
+		/* PORTE8 (pin 11) is configured as UART5_TX */
+		PORT_SetPinMux(PORTE, 8U, kPORT_MuxAlt3);
 
-    SIM->SOPT5 = ((SIM->SOPT5 &
-                   /* Mask bits to zero which are setting */
-                   (~(SIM_SOPT5_UART0TXSRC_MASK)))
+		/* PORTE9 (pin 12) is configured as UART5_RX */
+		PORT_SetPinMux(PORTE, 9U, kPORT_MuxAlt3);
 
-                  /* UART 0 transmit data source select: UART0_TX pin. */
-                  | SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX));
+		/* PORTE10 (pin 13) is configured as UART5_CTS_b */
+		PORT_SetPinMux(PORTE, 10U, kPORT_MuxAlt3);
+
+		/* PORTE11 (pin 14) is configured as UART5_RTS_b */
+		PORT_SetPinMux(PORTE, 11U, kPORT_MuxAlt3);
+
+		SIM->SOPT5 = ((SIM->SOPT5 &
+									 /* Mask bits to zero which are setting */
+									 (~(SIM_SOPT5_UART0TXSRC_MASK)))
+
+									/* UART 0 transmit data source select: UART0_TX pin. */
+									| SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX));
 }
 /***********************************************************************************************************************
  * EOF

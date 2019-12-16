@@ -32,7 +32,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "fsl_uart.h"
+#include <arch/cm3/nxp/vendor/fsl_uart.h>
 
 /*******************************************************************************
  * Definitions
@@ -158,14 +158,14 @@ uint32_t UART_GetInstance(UART_Type *base)
         }
     }
 
-    assert(instance < uartArrayCount);
+    // assert(instance < uartArrayCount);
 
     return instance;
 }
 
 size_t UART_TransferGetRxRingBufferLength(uart_handle_t *handle)
 {
-    assert(handle);
+    // assert(handle);
 
     size_t size;
 
@@ -183,7 +183,7 @@ size_t UART_TransferGetRxRingBufferLength(uart_handle_t *handle)
 
 static bool UART_TransferIsRxRingBufferFull(uart_handle_t *handle)
 {
-    assert(handle);
+    // assert(handle);
 
     bool full;
 
@@ -201,11 +201,11 @@ static bool UART_TransferIsRxRingBufferFull(uart_handle_t *handle)
 
 status_t UART_Init(UART_Type *base, const uart_config_t *config, uint32_t srcClock_Hz)
 {
-    assert(config);
-    assert(config->baudRate_Bps);
+    // assert(config);
+    // assert(config->baudRate_Bps);
 #if defined(FSL_FEATURE_UART_HAS_FIFO) && FSL_FEATURE_UART_HAS_FIFO
-    assert(FSL_FEATURE_UART_FIFO_SIZEn(base) >= config->txFifoWatermark);
-    assert(FSL_FEATURE_UART_FIFO_SIZEn(base) >= config->rxFifoWatermark);
+    // assert(FSL_FEATURE_UART_FIFO_SIZEn(base) >= config->txFifoWatermark);
+    // assert(FSL_FEATURE_UART_FIFO_SIZEn(base) >= config->rxFifoWatermark);
 #endif
 
     uint16_t sbr = 0;
@@ -360,7 +360,7 @@ void UART_Deinit(UART_Type *base)
 
 void UART_GetDefaultConfig(uart_config_t *config)
 {
-    assert(config);
+    // assert(config);
 
     config->baudRate_Bps = 115200U;
     config->parityMode = kUART_ParityDisabled;
@@ -382,7 +382,7 @@ void UART_GetDefaultConfig(uart_config_t *config)
 
 status_t UART_SetBaudRate(UART_Type *base, uint32_t baudRate_Bps, uint32_t srcClock_Hz)
 {
-    assert(baudRate_Bps);
+    // assert(baudRate_Bps);
 
     uint16_t sbr = 0;
     uint32_t baudDiff = 0;
@@ -574,7 +574,7 @@ void UART_WriteBlocking(UART_Type *base, const uint8_t *data, size_t length)
 
 static void UART_WriteNonBlocking(UART_Type *base, const uint8_t *data, size_t length)
 {
-    assert(data);
+    // assert(data);
 
     size_t i;
 
@@ -588,7 +588,7 @@ static void UART_WriteNonBlocking(UART_Type *base, const uint8_t *data, size_t l
 
 status_t UART_ReadBlocking(UART_Type *base, uint8_t *data, size_t length)
 {
-    assert(data);
+    // assert(data);
 
     uint32_t statusFlag;
 
@@ -630,7 +630,7 @@ status_t UART_ReadBlocking(UART_Type *base, uint8_t *data, size_t length)
 
 static void UART_ReadNonBlocking(UART_Type *base, uint8_t *data, size_t length)
 {
-    assert(data);
+    // assert(data);
 
     size_t i;
 
@@ -647,7 +647,7 @@ void UART_TransferCreateHandle(UART_Type *base,
                                uart_transfer_callback_t callback,
                                void *userData)
 {
-    assert(handle);
+    // assert(handle);
 
     uint32_t instance;
 
@@ -675,8 +675,8 @@ void UART_TransferCreateHandle(UART_Type *base,
 
 void UART_TransferStartRingBuffer(UART_Type *base, uart_handle_t *handle, uint8_t *ringBuffer, size_t ringBufferSize)
 {
-    assert(handle);
-    assert(ringBuffer);
+    // assert(handle);
+    // assert(ringBuffer);
 
     /* Setup the ringbuffer address */
     handle->rxRingBuffer = ringBuffer;
@@ -696,7 +696,7 @@ void UART_TransferStartRingBuffer(UART_Type *base, uart_handle_t *handle, uint8_
 
 void UART_TransferStopRingBuffer(UART_Type *base, uart_handle_t *handle)
 {
-    assert(handle);
+    // assert(handle);
 
     if (handle->rxState == kUART_RxIdle)
     {
@@ -717,10 +717,10 @@ void UART_TransferStopRingBuffer(UART_Type *base, uart_handle_t *handle)
 
 status_t UART_TransferSendNonBlocking(UART_Type *base, uart_handle_t *handle, uart_transfer_t *xfer)
 {
-    assert(handle);
-    assert(xfer);
-    assert(xfer->dataSize);
-    assert(xfer->data);
+    // assert(handle);
+    // assert(xfer);
+    // assert(xfer->dataSize);
+    // assert(xfer->data);
 
     status_t status;
 
@@ -747,7 +747,7 @@ status_t UART_TransferSendNonBlocking(UART_Type *base, uart_handle_t *handle, ua
 
 void UART_TransferAbortSend(UART_Type *base, uart_handle_t *handle)
 {
-    assert(handle);
+    // assert(handle);
 
     UART_DisableInterrupts(base, kUART_TxDataRegEmptyInterruptEnable | kUART_TransmissionCompleteInterruptEnable);
 
@@ -757,8 +757,8 @@ void UART_TransferAbortSend(UART_Type *base, uart_handle_t *handle)
 
 status_t UART_TransferGetSendCount(UART_Type *base, uart_handle_t *handle, uint32_t *count)
 {
-    assert(handle);
-    assert(count);
+    // assert(handle);
+    // assert(count);
 
     if (kUART_TxIdle == handle->txState)
     {
@@ -775,10 +775,10 @@ status_t UART_TransferReceiveNonBlocking(UART_Type *base,
                                          uart_transfer_t *xfer,
                                          size_t *receivedBytes)
 {
-    assert(handle);
-    assert(xfer);
-    assert(xfer->data);
-    assert(xfer->dataSize);
+    // assert(handle);
+    // assert(xfer);
+    // assert(xfer->data);
+    // assert(xfer->dataSize);
 
     uint32_t i;
     status_t status;
@@ -894,7 +894,7 @@ status_t UART_TransferReceiveNonBlocking(UART_Type *base,
 
 void UART_TransferAbortReceive(UART_Type *base, uart_handle_t *handle)
 {
-    assert(handle);
+    // assert(handle);
 
     /* Only abort the receive to handle->rxData, the RX ring buffer is still working. */
     if (!handle->rxRingBuffer)
@@ -915,8 +915,8 @@ void UART_TransferAbortReceive(UART_Type *base, uart_handle_t *handle)
 
 status_t UART_TransferGetReceiveCount(UART_Type *base, uart_handle_t *handle, uint32_t *count)
 {
-    assert(handle);
-    assert(count);
+    // assert(handle);
+    // assert(count);
 
     if (kUART_RxIdle == handle->rxState)
     {
@@ -935,7 +935,7 @@ status_t UART_TransferGetReceiveCount(UART_Type *base, uart_handle_t *handle, ui
 
 void UART_TransferHandleIRQ(UART_Type *base, uart_handle_t *handle)
 {
-    assert(handle);
+    // assert(handle);
 
     uint8_t count;
     uint8_t tempCount;

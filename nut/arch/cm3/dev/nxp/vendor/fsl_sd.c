@@ -32,9 +32,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "fsl_sd.h"
+#include <arch/cm3/nxp/vendor/fsl_sd.h>
 #include <stdio.h>
-#include "fsl_debug_console.h"
+#include <arch/cm3/nxp/vendor/fsl_debug_console.h>
 
 /*******************************************************************************
  * Prototypes
@@ -333,50 +333,50 @@ extern uint32_t g_sdmmc[SDK_SIZEALIGN(SDMMC_GLOBAL_BUFFER_SIZE, SDMMC_DATA_BUFFE
  ******************************************************************************/
 static status_t inline SD_SelectCard(sd_card_t *card, bool isSelected)
 {
-    assert(card);
+    // assert(card);
 
     return SDMMC_SelectCard(card->host.base, card->host.transfer, card->relativeAddress, isSelected);
 }
 
 static status_t inline SD_SendApplicationCmd(sd_card_t *card, uint32_t relativeAddress)
 {
-    assert(card);
+    // assert(card);
 
     return SDMMC_SendApplicationCommand(card->host.base, card->host.transfer, relativeAddress);
 }
 
 static status_t inline SD_GoIdle(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     return SDMMC_GoIdle(card->host.base, card->host.transfer);
 }
 
 static status_t inline SD_SetBlockSize(sd_card_t *card, uint32_t blockSize)
 {
-    assert(card);
+    // assert(card);
 
     return SDMMC_SetBlockSize(card->host.base, card->host.transfer, blockSize);
 }
 
 static status_t inline SD_ExecuteTuning(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     return SDMMC_ExecuteTuning(card->host.base, card->host.transfer, kSD_SendTuningBlock, 64U);
 }
 
 static status_t SD_SwitchVoltage(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     return SDMMC_SwitchVoltage(card->host.base, card->host.transfer);
 }
 
 static status_t SD_Transfer(sd_card_t *card, SDMMCHOST_TRANSFER *content, uint32_t retry)
 {
-    assert(card->host.transfer);
-    assert(content);
+    // assert(card->host.transfer);
+    // assert(content);
     status_t error;
 
     do
@@ -423,7 +423,7 @@ static status_t SD_Transfer(sd_card_t *card, SDMMCHOST_TRANSFER *content, uint32
 
 static status_t SD_WaitWriteComplete(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -454,7 +454,7 @@ static status_t SD_WaitWriteComplete(sd_card_t *card)
 
 static status_t SD_StopTransmission(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -477,7 +477,7 @@ static status_t SD_StopTransmission(sd_card_t *card)
 
 static status_t SD_SendRca(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -499,8 +499,8 @@ static status_t SD_SendRca(sd_card_t *card)
 
 static status_t SD_SwitchFunction(sd_card_t *card, uint32_t mode, uint32_t group, uint32_t number, uint32_t *status)
 {
-    assert(card);
-    assert(status);
+    // assert(card);
+    // assert(status);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -529,8 +529,8 @@ static status_t SD_SwitchFunction(sd_card_t *card, uint32_t mode, uint32_t group
 
 static void SD_DecodeScr(sd_card_t *card, uint32_t *rawScr)
 {
-    assert(card);
-    assert(rawScr);
+    // assert(card);
+    // assert(rawScr);
 
     sd_scr_t *scr;
 
@@ -587,7 +587,7 @@ static void SD_DecodeScr(sd_card_t *card, uint32_t *rawScr)
 
 static status_t SD_SendScr(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -645,7 +645,7 @@ static status_t SD_SendScr(sd_card_t *card)
 
 static status_t SD_SelectFunction(sd_card_t *card, uint32_t group, uint32_t function)
 {
-    assert(card);
+    // assert(card);
 
     uint32_t *functionStatus = g_sdmmc;
     uint16_t functionGroupInfo[6U] = {0};
@@ -755,7 +755,7 @@ static status_t SD_SelectFunction(sd_card_t *card, uint32_t group, uint32_t func
 
 static status_t SD_SetDataBusWidth(sd_card_t *card, sd_data_bus_width_t width)
 {
-    assert(card);
+    // assert(card);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -792,8 +792,8 @@ static status_t SD_SetDataBusWidth(sd_card_t *card, sd_data_bus_width_t width)
 
 static void SD_DecodeCsd(sd_card_t *card, uint32_t *rawCsd)
 {
-    assert(card);
-    assert(rawCsd);
+    // assert(card);
+    // assert(rawCsd);
 
     sd_csd_t *csd;
 
@@ -893,7 +893,7 @@ static void SD_DecodeCsd(sd_card_t *card, uint32_t *rawCsd)
 
 static status_t SD_SendCsd(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -918,8 +918,8 @@ static status_t SD_SendCsd(sd_card_t *card)
 
 static void SD_DecodeCid(sd_card_t *card, uint32_t *rawCid)
 {
-    assert(card);
-    assert(rawCid);
+    // assert(card);
+    // assert(rawCid);
 
     sd_cid_t *cid;
 
@@ -943,7 +943,7 @@ static void SD_DecodeCid(sd_card_t *card, uint32_t *rawCid)
 
 static status_t SD_AllSendCid(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -967,7 +967,7 @@ static status_t SD_AllSendCid(sd_card_t *card)
 
 static status_t SD_ApplicationSendOperationCondition(sd_card_t *card, uint32_t argument)
 {
-    assert(card);
+    // assert(card);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -1017,7 +1017,7 @@ static status_t SD_ApplicationSendOperationCondition(sd_card_t *card, uint32_t a
 
 static status_t SD_SendInterfaceCondition(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -1054,7 +1054,7 @@ static status_t SD_SendInterfaceCondition(sd_card_t *card)
 
 static status_t SD_SelectBusTiming(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     status_t error = kStatus_SDMMC_SwitchBusTimingFailed;
 
@@ -1168,7 +1168,7 @@ static status_t SD_SelectBusTiming(sd_card_t *card)
 
 static status_t SD_SetDriverStrength(sd_card_t *card, sd_driver_strength_t driverStrength)
 {
-    assert(card);
+    // assert(card);
 
     status_t error;
     uint32_t strength = driverStrength;
@@ -1180,7 +1180,7 @@ static status_t SD_SetDriverStrength(sd_card_t *card, sd_driver_strength_t drive
 
 static status_t SD_SetMaxCurrent(sd_card_t *card, sd_max_current_t maxCurrent)
 {
-    assert(card);
+    // assert(card);
 
     status_t error;
     uint32_t current = maxCurrent;
@@ -1192,10 +1192,10 @@ static status_t SD_SetMaxCurrent(sd_card_t *card, sd_max_current_t maxCurrent)
 
 static status_t SD_Read(sd_card_t *card, uint8_t *buffer, uint32_t startBlock, uint32_t blockSize, uint32_t blockCount)
 {
-    assert(card);
-    assert(buffer);
-    assert(blockCount);
-    assert(blockSize == FSL_SDMMC_DEFAULT_BLOCK_SIZE);
+    // assert(card);
+    // assert(buffer);
+    // assert(blockCount);
+    // assert(blockSize == FSL_SDMMC_DEFAULT_BLOCK_SIZE);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -1256,10 +1256,10 @@ static status_t SD_Read(sd_card_t *card, uint8_t *buffer, uint32_t startBlock, u
 static status_t SD_Write(
     sd_card_t *card, const uint8_t *buffer, uint32_t startBlock, uint32_t blockSize, uint32_t blockCount)
 {
-    assert(card);
-    assert(buffer);
-    assert(blockCount);
-    assert(blockSize == FSL_SDMMC_DEFAULT_BLOCK_SIZE);
+    // assert(card);
+    // assert(buffer);
+    // assert(blockCount);
+    // assert(blockSize == FSL_SDMMC_DEFAULT_BLOCK_SIZE);
 
     SDMMCHOST_TRANSFER content = {0};
     SDMMCHOST_COMMAND command = {0};
@@ -1324,8 +1324,8 @@ static status_t SD_Write(
 
 static status_t SD_Erase(sd_card_t *card, uint32_t startBlock, uint32_t blockCount)
 {
-    assert(card);
-    assert(blockCount);
+    // assert(card);
+    // assert(blockCount);
 
     uint32_t eraseBlockStart;
     uint32_t eraseBlockEnd;
@@ -1394,7 +1394,7 @@ static status_t SD_Erase(sd_card_t *card, uint32_t startBlock, uint32_t blockCou
 
 bool SD_CheckReadOnly(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     return ((card->csd.flags & kSD_CsdPermanentWriteProtectFlag) ||
             (card->csd.flags & kSD_CsdTemporaryWriteProtectFlag));
@@ -1402,10 +1402,10 @@ bool SD_CheckReadOnly(sd_card_t *card)
 
 status_t SD_ReadBlocks(sd_card_t *card, uint8_t *buffer, uint32_t startBlock, uint32_t blockCount)
 {
-    assert(card);
-    assert(buffer);
-    assert(blockCount);
-    assert((blockCount + startBlock) <= card->blockCount);
+    // assert(card);
+    // assert(buffer);
+    // assert(blockCount);
+    // assert((blockCount + startBlock) <= card->blockCount);
 
     uint32_t blockCountOneTime;
     uint32_t blockLeft;
@@ -1458,10 +1458,10 @@ status_t SD_ReadBlocks(sd_card_t *card, uint8_t *buffer, uint32_t startBlock, ui
 
 status_t SD_WriteBlocks(sd_card_t *card, const uint8_t *buffer, uint32_t startBlock, uint32_t blockCount)
 {
-    assert(card);
-    assert(buffer);
-    assert(blockCount);
-    assert((blockCount + startBlock) <= card->blockCount);
+    // assert(card);
+    // assert(buffer);
+    // assert(blockCount);
+    // assert((blockCount + startBlock) <= card->blockCount);
 
     uint32_t blockCountOneTime; /* The block count can be wrote in one time sending WRITE_BLOCKS command. */
     uint32_t blockLeft;         /* Left block count to be wrote. */
@@ -1512,9 +1512,9 @@ status_t SD_WriteBlocks(sd_card_t *card, const uint8_t *buffer, uint32_t startBl
 
 status_t SD_EraseBlocks(sd_card_t *card, uint32_t startBlock, uint32_t blockCount)
 {
-    assert(card);
-    assert(blockCount);
-    assert((blockCount + startBlock) <= card->blockCount);
+    // assert(card);
+    // assert(blockCount);
+    // assert((blockCount + startBlock) <= card->blockCount);
 
     uint32_t blockCountOneTime; /* The block count can be erased in one time sending ERASE_BLOCKS command. */
     uint32_t blockDone = 0U;    /* The block count has been erased. */
@@ -1549,7 +1549,7 @@ status_t SD_EraseBlocks(sd_card_t *card, uint32_t startBlock, uint32_t blockCoun
 
 status_t SD_CardInit(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     uint32_t applicationCommand41Argument = 0U;
 
@@ -1594,14 +1594,14 @@ status_t SD_CardInit(sd_card_t *card)
     /* Check card's supported interface condition. */
     if (kStatus_Success == SD_SendInterfaceCondition(card))
     {
-    	PRINTF("\r\nSD_SendInterfaceCondition success\r\n");
+    	// PRINTF("\r\nSD_SendInterfaceCondition success\r\n");
         /* SDHC or SDXC card */
         applicationCommand41Argument |= kSD_OcrHostCapacitySupportFlag;
         card->flags |= kSD_SupportSdhcFlag;
     }
     else
     {
-    	PRINTF("\r\nSD_SendInterfaceCondition fail\r\n");
+    	//PRINTF("\r\nSD_SendInterfaceCondition fail\r\n");
         /* SDSC card */
         if (kStatus_Success != SD_GoIdle(card))
         {
@@ -1682,14 +1682,14 @@ status_t SD_CardInit(sd_card_t *card)
 
 void SD_CardDeinit(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     SD_SelectCard(card, false);
 }
 
 status_t SD_HostInit(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     if ((!card->isHostReady) && SDMMCHOST_Init(&(card->host), (void *)(card->usrParam.cd)) != kStatus_Success)
     {
@@ -1704,7 +1704,7 @@ status_t SD_HostInit(sd_card_t *card)
 
 void SD_HostDeinit(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     SDMMCHOST_Deinit(&(card->host));
     /* should re-init host */
@@ -1738,7 +1738,7 @@ bool SD_IsCardPresent(sd_card_t *card)
 
 status_t SD_Init(sd_card_t *card)
 {
-    assert(card);
+    // assert(card);
 
     if (!card->isHostReady)
     {

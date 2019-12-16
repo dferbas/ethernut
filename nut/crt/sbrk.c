@@ -46,7 +46,7 @@ static long lib_heap_size = LIB_HEAPSIZE;
  *
  * \return Pointer to the new space or -1 on errors.
  */
-char *_sbrk(size_t len)
+__attribute__ ((used)) char * _sbrk(size_t len)
 {
     char *rc = (char *)-1;
 
@@ -60,3 +60,4 @@ char *_sbrk(size_t len)
     }
     return rc;
 }
+

@@ -252,15 +252,24 @@ nutarch_cm3 =
         provides = {
 --            "HW_FLASH",
 --            "HW_FLASH_STM32",
---            "DEV_RTC",
+            "DEV_RTC",
+            "DEV_ETHER",
 --            "HW_STM32_BACKUP_REG",
 --            "DEV_CRC",
             "DEV_UART",
             "DEV_UART_SPECIFIC",
+            "NET_MAC",
+            "NET_PHY",
+            "NET_LINK",
         },
         sources = {
             "cm3/dev/nxp/mk64f_clk.c",
-            "cm3/dev/nxp/mk64f_irqreg.c",
+            "cm3/dev/nxp/ih_mk64f.c",
+            "cm3/dev/nxp/mk64f_i2c.c",
+            "cm3/dev/nxp/mk64f_i2c0.c",
+            "cm3/dev/nxp/mk64f_usart0.c",
+            "cm3/dev/nxp/mk64f_usart1.c",
+            "cm3/dev/nxp/mk64f_usart2.c",
             "cm3/dev/nxp/system_mk64f.c",
             "cm3/dev/nxp/eth_mcux.c",
             "cm3/dev/nxp/vendor/fsl_clock.c",
@@ -268,6 +277,13 @@ nutarch_cm3 =
             "cm3/dev/nxp/vendor/fsl_gpio.c",
             "cm3/dev/nxp/vendor/fsl_enet.c",
             "cm3/dev/nxp/vendor/fsl_phy.c",
+            "cm3/dev/nxp/vendor/fsl_sdhc.c",
+            "cm3/dev/nxp/vendor/fsl_sd.c",
+            "cm3/dev/nxp/vendor/fsl_sdmmc_common.c",
+            "cm3/dev/nxp/vendor/fsl_sdmmc_host.c",
+            "cm3/dev/nxp/vendor/fsl_sdmmc_event.c",
+            "cm3/dev/nxp/vendor/fsl_i2c.c",
+            "cm3/dev/nxp/vendor/fsl_uart.c",
         },
         options =
         {
@@ -277,7 +293,8 @@ nutarch_cm3 =
                 descrition ="MK64F Family.",
                 default = 1,
                 requires = { "HW_MCU_MK64F" },
-                file = "include/cfg/arch.h"
+                file = "include/cfg/arch.h",
+                makedefs = { "HWDEF+=-DCPU_MK64FN1M0VLQ12" }
             },
         }
     }

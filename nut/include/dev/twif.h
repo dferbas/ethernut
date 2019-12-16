@@ -106,6 +106,10 @@ typedef struct _NUTTWIBUS NUTTWIBUS;
 #include <arch/cm3/stm/stm32_twi.h>
 #endif
 
+#if defined(MCU_MK64F)
+#include <arch/cm3/nxp/mk64f_i2c.h>
+#endif
+
 #elif defined(__arm__) && !defined(__CORTEX__)
 
 #if defined(MCU_AT91R40008)

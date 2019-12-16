@@ -6,19 +6,16 @@
  ******************************************************************************/
 
 /**
- * @file mk64f_irqreg.h
+ * @file mk64f.h
  * @author Ilja Kartašov <ik@lowenware.com>
  * @brief 
  *
  * @see https://lowenware.com/
  */
 
-#ifndef MK64F_IRQREG_H_15DDB119_2B5A_4DA9_BD1E_E738271DE233
-#define MK64F_IRQREG_H_15DDB119_2B5A_4DA9_BD1E_E738271DE233
+#ifndef MK64F_H_0CACAF5B_4616_4CB0_934C_83CF17F6007F
+#define MK64F_H_0CACAF5B_4616_4CB0_934C_83CF17F6007F
 
-extern IRQ_HANDLER sig_I2C0;     // I2C 0 event
-extern IRQ_HANDLER sig_USART0;     // I2C 0 event
-extern IRQ_HANDLER sig_USART4;     // I2C 0 event
-extern IRQ_HANDLER sig_USART5;     // I2C 0 event
+#include <arch/cm3/nxp/vendor/MK64F12.h>
 
-#endif /* !MK64F_IRQREG_H */
+#endif /* !MK64F_H */

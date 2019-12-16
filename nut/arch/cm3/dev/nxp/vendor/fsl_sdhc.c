@@ -32,7 +32,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "fsl_sdhc.h"
+#include <arch/cm3/nxp/vendor/fsl_sdhc.h>
 
 /*******************************************************************************
  * Definitions
@@ -254,7 +254,7 @@ static uint32_t SDHC_GetInstance(SDHC_Type *base)
         instance++;
     }
 
-    assert(instance < ARRAY_SIZE(s_sdhcBase));
+    // assert(instance < ARRAY_SIZE(s_sdhcBase));
 
     return instance;
 }
@@ -717,7 +717,7 @@ static void SDHC_TransferHandleCardDetect(SDHC_Type *base, sdhc_handle_t *handle
 
 static void SDHC_TransferHandleCommand(SDHC_Type *base, sdhc_handle_t *handle, uint32_t interruptFlags)
 {
-    assert(handle->command);
+    // assert(handle->command);
 
     if ((interruptFlags & kSDHC_CommandErrorFlag) && (!(handle->data)) && (handle->callback.TransferComplete))
     {
@@ -736,7 +736,7 @@ static void SDHC_TransferHandleCommand(SDHC_Type *base, sdhc_handle_t *handle, u
 
 static void SDHC_TransferHandleData(SDHC_Type *base, sdhc_handle_t *handle, uint32_t interruptFlags)
 {
-    assert(handle->data);
+    // assert(handle->data);
 
     if ((!(handle->data->enableIgnoreError)) && (interruptFlags & (kSDHC_DataErrorFlag | kSDHC_DmaErrorFlag)) &&
         (handle->callback.TransferComplete))
@@ -786,12 +786,12 @@ static void SDHC_TransferHandleSdioBlockGap(SDHC_Type *base, sdhc_handle_t *hand
 
 void SDHC_Init(SDHC_Type *base, const sdhc_config_t *config)
 {
-    assert(config);
+    // assert(config);
 #if !defined FSL_SDHC_ENABLE_ADMA1
-    assert(config->dmaMode != kSDHC_DmaModeAdma1);
+    // assert(config->dmaMode != kSDHC_DmaModeAdma1);
 #endif /* FSL_SDHC_ENABLE_ADMA1 */
-    assert((config->writeWatermarkLevel >= 1U) && (config->writeWatermarkLevel <= 128U));
-    assert((config->readWatermarkLevel >= 1U) && (config->readWatermarkLevel <= 128U));
+    // assert((config->writeWatermarkLevel >= 1U) && (config->writeWatermarkLevel <= 128U));
+    // assert((config->readWatermarkLevel >= 1U) && (config->readWatermarkLevel <= 128U));
 
     uint32_t proctl;
     uint32_t wml;
@@ -857,7 +857,7 @@ bool SDHC_Reset(SDHC_Type *base, uint32_t mask, uint32_t timeout)
 
 void SDHC_GetCapability(SDHC_Type *base, sdhc_capability_t *capability)
 {
-    assert(capability);
+    // assert(capability);
 
     uint32_t htCapability;
     uint32_t hostVer;
@@ -887,8 +887,8 @@ void SDHC_GetCapability(SDHC_Type *base, sdhc_capability_t *capability)
 
 uint32_t SDHC_SetSdClock(SDHC_Type *base, uint32_t srcClock_Hz, uint32_t busClock_Hz)
 {
-    assert(srcClock_Hz != 0U);
-    assert((busClock_Hz != 0U) && (busClock_Hz <= srcClock_Hz));
+    // assert(srcClock_Hz != 0U);
+    // assert((busClock_Hz != 0U) && (busClock_Hz <= srcClock_Hz));
 
     uint32_t totalDiv = 0U;
     uint32_t divisor = 0U;
@@ -993,9 +993,9 @@ bool SDHC_SetCardActive(SDHC_Type *base, uint32_t timeout)
 
 void SDHC_SetTransferConfig(SDHC_Type *base, const sdhc_transfer_config_t *config)
 {
-    assert(config);
-    assert(config->dataBlockSize <= (SDHC_BLKATTR_BLKSIZE_MASK >> SDHC_BLKATTR_BLKSIZE_SHIFT));
-    assert(config->dataBlockCount <= (SDHC_BLKATTR_BLKCNT_MASK >> SDHC_BLKATTR_BLKCNT_SHIFT));
+    // assert(config);
+    // assert(config->dataBlockSize <= (SDHC_BLKATTR_BLKSIZE_MASK >> SDHC_BLKATTR_BLKSIZE_SHIFT));
+    // assert(config->dataBlockCount <= (SDHC_BLKATTR_BLKCNT_MASK >> SDHC_BLKATTR_BLKCNT_SHIFT));
 
     base->BLKATTR = ((base->BLKATTR & ~(SDHC_BLKATTR_BLKSIZE_MASK | SDHC_BLKATTR_BLKCNT_MASK)) |
                      (SDHC_BLKATTR_BLKSIZE(config->dataBlockSize) | SDHC_BLKATTR_BLKCNT(config->dataBlockCount)));
@@ -1057,9 +1057,9 @@ void SDHC_EnableSdioControl(SDHC_Type *base, uint32_t mask, bool enable)
 
 void SDHC_SetMmcBootConfig(SDHC_Type *base, const sdhc_boot_config_t *config)
 {
-    assert(config);
-    assert(config->ackTimeoutCount <= (SDHC_MMCBOOT_DTOCVACK_MASK >> SDHC_MMCBOOT_DTOCVACK_SHIFT));
-    assert(config->blockCount <= (SDHC_MMCBOOT_BOOTBLKCNT_MASK >> SDHC_MMCBOOT_BOOTBLKCNT_SHIFT));
+    // assert(config);
+    // assert(config->ackTimeoutCount <= (SDHC_MMCBOOT_DTOCVACK_MASK >> SDHC_MMCBOOT_DTOCVACK_SHIFT));
+    // assert(config->blockCount <= (SDHC_MMCBOOT_BOOTBLKCNT_MASK >> SDHC_MMCBOOT_BOOTBLKCNT_SHIFT));
 
     uint32_t mmcboot = 0U;
 
@@ -1241,7 +1241,7 @@ status_t SDHC_SetAdmaTableConfig(SDHC_Type *base,
 
 status_t SDHC_TransferBlocking(SDHC_Type *base, uint32_t *admaTable, uint32_t admaTableWords, sdhc_transfer_t *transfer)
 {
-    assert(transfer);
+    // assert(transfer);
 
     status_t error = kStatus_Success;
     sdhc_dma_mode_t dmaMode = (sdhc_dma_mode_t)((base->PROCTL & SDHC_PROCTL_DMAS_MASK) >> SDHC_PROCTL_DMAS_SHIFT);
@@ -1305,8 +1305,8 @@ void SDHC_TransferCreateHandle(SDHC_Type *base,
                                const sdhc_transfer_callback_t *callback,
                                void *userData)
 {
-    assert(handle);
-    assert(callback);
+    // assert(handle);
+    // assert(callback);
 
     /* Zero the handle. */
     memset(handle, 0, sizeof(*handle));
@@ -1334,7 +1334,7 @@ void SDHC_TransferCreateHandle(SDHC_Type *base,
 status_t SDHC_TransferNonBlocking(
     SDHC_Type *base, sdhc_handle_t *handle, uint32_t *admaTable, uint32_t admaTableWords, sdhc_transfer_t *transfer)
 {
-    assert(transfer);
+    // assert(transfer);
 
     sdhc_dma_mode_t dmaMode = (sdhc_dma_mode_t)((base->PROCTL & SDHC_PROCTL_DMAS_MASK) >> SDHC_PROCTL_DMAS_SHIFT);
     status_t error = kStatus_Success;
@@ -1391,7 +1391,7 @@ status_t SDHC_TransferNonBlocking(
 
 void SDHC_TransferHandleIRQ(SDHC_Type *base, sdhc_handle_t *handle)
 {
-    assert(handle);
+    // assert(handle);
 
     uint32_t interruptFlags;
 
@@ -1425,7 +1425,7 @@ void SDHC_TransferHandleIRQ(SDHC_Type *base, sdhc_handle_t *handle)
 #if defined(SDHC)
 void SDHC_DriverIRQHandler(void)
 {
-    assert(s_sdhcHandle[0]);
+    // assert(s_sdhcHandle[0]);
 
     s_sdhcIsr(SDHC, s_sdhcHandle[0]);
 /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping

@@ -885,7 +885,7 @@ void SDHC_SetTransferConfig(SDHC_Type *base, const sdhc_transfer_config_t *confi
  */
 static inline uint32_t SDHC_GetCommandResponse(SDHC_Type *base, uint32_t index)
 {
-    assert(index < 4U);
+    // assert(index < 4U);
 
     return base->CMDRSP[index];
 }

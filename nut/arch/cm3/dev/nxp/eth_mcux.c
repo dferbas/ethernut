@@ -109,7 +109,6 @@ SDK_ALIGN(static uint8_t g_txDataBuff[ETHMCUX_TXBD_NUM][SDK_SIZEALIGN(ETHMCUX_TX
 
 static enet_handle_t g_handle;
 static uint32_t g_testTxNum = 0;
-static uint8_t g_macAddr[6] = {0xd4, 0xbe, 0xd9, 0x45, 0x22, 0x60};
 static uint8_t m_frame[ENET_FRAME_MAX_FRAMELEN];
 
 
@@ -237,15 +236,17 @@ int EthMcuxOutput(NUTDEVICE * dev, NETBUF * nb)
 	sz += nb->nb_dl.sz;
 
 	memcpy(buf, nb->nb_dl.vp, nb->nb_dl.sz);
-	memcpy(&buf[6], g_macAddr, sizeof(g_macAddr));
+	/* ToDo: find if NUT can send data with MAC at this point already */
+	//memcpy(&buf[6], g_macAddr, sizeof(g_macAddr));
 	buf += nb->nb_dl.sz;
 	memcpy(buf, nb->nb_nw.vp, nb->nb_nw.sz);
 	buf += nb->nb_nw.sz; 
 	memcpy(buf, nb->nb_tp.vp, nb->nb_tp.sz);
 	buf += nb->nb_tp.sz;
 	memcpy(buf, nb->nb_ap.vp, nb->nb_ap.sz);
-  m_frame[12] = (sz >> 8) & 0xFFU;
-  m_frame[13] = sz & 0xFFU;
+  /* m_frame[12] = (sz >> 8) & 0xFFU;
+   * m_frame[13] = sz & 0xFFU; */
+
 	/*
 	 * After initialization we are waiting for a long time to give
 	 * the PHY a chance to establish an Ethernet link.
@@ -265,6 +266,41 @@ int EthMcuxOutput(NUTDEVICE * dev, NETBUF * nb)
 	return rc;
 }
 
+static int EthMcuxIOCtl(NUTDEVICE * dev, int req, void *conf)
+{
+	int rc = 0;
+	uint32_t *lvp = (uint32_t *)conf;
+	IFNET *nif = (IFNET *)dev->dev_icb;
+//	ETHMCUXINFO *ni = (ETHMCUXINFO *)dev->dev_dcb;
+
+	switch (req)
+	{
+		case SIOCSIFFLAGS:
+			break;
+
+		case SIOCGIFFLAGS:
+			*lvp = nif->if_flags;
+			break;
+
+		case SIOCSIFADDR:
+			/* Set interface hardware address. */
+			memcpy(nif->if_mac, conf, sizeof(nif->if_mac));
+			ENET_SetMacAddr(ETHMCUX_ENET, nif->if_mac);
+			break;
+
+		case SIOCGIFADDR:
+			/* Get interface hardware address. */
+			memcpy(conf, nif->if_mac, sizeof(nif->if_mac));
+			break;
+
+		default:
+			rc = -1;
+			break;
+	}
+	return rc;
+}
+
+
 /*!
  * \brief Initialize Ethernet hardware.
  *
@@ -277,6 +313,7 @@ int EthMcuxOutput(NUTDEVICE * dev, NETBUF * nb)
 int EthMcuxInit(NUTDEVICE * dev)
 {
 	ETHMCUXINFO *ni = (ETHMCUXINFO *) dev->dev_dcb;
+	IFNET *nif = (IFNET *)dev->dev_icb;
 	enet_config_t config;
 	uint32_t sysClock;
 	bool link = false;
@@ -330,7 +367,7 @@ int EthMcuxInit(NUTDEVICE * dev)
 		config.miiDuplex = (enet_mii_duplex_t)duplex;
 	}
 
-	ENET_Init(ETHMCUX_ENET, &g_handle, &config, &buffConfig[0], &g_macAddr[0], sysClock);
+	ENET_Init(ETHMCUX_ENET, &g_handle, &config, &buffConfig[0], nif->if_mac, sysClock);
 	ENET_ActiveRead(ETHMCUX_ENET);
 	/* Register interrupt handler. */
 	/*
@@ -391,8 +428,8 @@ NUTDEVICE devEthMcux = {
 		0,                          /*!< \brief First interrupt number. */
 		&ifn_eth0,                  /*!< \brief Interface control block. */
 		&dcb_eth0,                  /*!< \brief Driver control block. */
-		EthMcuxInit,                   /*!< \brief Driver initialization routine. */
-		0,                          /*!< \brief Driver specific control function. */
+		EthMcuxInit,                /*!< \brief Driver initialization routine. */
+		EthMcuxIOCtl,               /*!< \brief Driver specific control function. */
 		0,                          /*!< \brief Read from device. */
 		0,                          /*!< \brief Write to device. */
 #ifdef __HARVARD_ARCH__
