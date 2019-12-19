@@ -166,37 +166,35 @@ static void NutBoardInitPinMux(void)
 	PORT_SetPinMux(PORTA, PIN28_IDX, kPORT_MuxAsGpio);           /* PORTA17 (pin 47) is configured as MII0_CRS */
 	PORT_SetPinMux(PORTA, PIN29_IDX, kPORT_MuxAlt4);           /* PORTA17 (pin 47) is configured as MII0_COL */
 
-//  const port_pin_config_t portb0_pin53_config = {
-//    kPORT_PullUp,                                            /* Internal pull-up resistor is enabled */
-//    kPORT_FastSlewRate,                                      /* Fast slew rate is configured */
-//    kPORT_PassiveFilterDisable,                              /* Passive filter is disabled */
-//    kPORT_OpenDrainEnable,                                   /* Open drain is enabled */
-//    kPORT_LowDriveStrength,                                  /* Low drive strength is configured */
-//    kPORT_MuxAlt4,                                           /* Pin is configured as RMII0_MDIO */
-//    kPORT_UnlockRegister                                     /* Pin Control Register fields [15:0] are not locked */
-//  };
-//  PORT_SetPinConfig(PORTB, PIN0_IDX, &portb0_pin53_config);  /* PORTB0 (pin 53) is configured as RMII0_MDIO */
-	PORT_SetPinMux(PORTB, PIN0_IDX, kPORT_MuxAlt4);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+  const port_pin_config_t portb0_pin53_config = {
+    kPORT_PullUp,                                            /* Internal pull-up resistor is enabled */
+    kPORT_FastSlewRate,                                      /* Fast slew rate is configured */
+    kPORT_PassiveFilterDisable,                              /* Passive filter is disabled */
+    kPORT_OpenDrainEnable,                                   /* Open drain is enabled */
+    kPORT_LowDriveStrength,                                  /* Low drive strength is configured */
+    kPORT_MuxAlt4,                                           /* Pin is configured as RMII0_MDIO */
+    kPORT_UnlockRegister                                     /* Pin Control Register fields [15:0] are not locked */
+  };
+  PORT_SetPinConfig(PORTB, PIN0_IDX, &portb0_pin53_config);  /* PORTB0 (pin 53) is configured as RMII0_MDIO */
+//	PORT_SetPinMux(PORTB, PIN0_IDX, kPORT_MuxAlt4);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
 	PORT_SetPinMux(PORTB, PIN1_IDX, kPORT_MuxAlt4);            /* PORTB1 (pin 54) is configured as MII0_MDC */
 
-	PORT_SetPinMux(PORTC, PIN16_IDX, kPORT_MuxAlt5);           /* PORTC16 (pin 90) is configured as ENET0_1588_TMR0 */
-	PORT_SetPinMux(PORTC, PIN17_IDX, kPORT_MuxAlt5);           /* PORTC17 (pin 91) is configured as ENET0_1588_TMR1 */
-	PORT_SetPinMux(PORTC, PIN18_IDX, kPORT_MuxAsGpio);           /* PORTC18 (pin 92) is configured as ENET0_1588_TMR2 */
-	PORT_SetPinMux(PORTC, PIN19_IDX, kPORT_MuxAsGpio);           /* PORTC18 (pin 92) is configured as ENET0_1588_TMR2 */
+	PORT_SetPinMux(PORTC, PIN16_IDX, kPORT_MuxAlt4);           /* PORTC16 (pin 90) is configured as ENET0_1588_TMR0 */
+	PORT_SetPinMux(PORTC, PIN17_IDX, kPORT_MuxAlt4);           /* PORTC17 (pin 91) is configured as ENET0_1588_TMR1 */
 
 	/*˙UART MCUX_0 */
-	PORT_SetPinMux(PORTB, PIN16_IDX, kPORT_MuxAlt3);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
-	PORT_SetPinMux(PORTB, PIN17_IDX, kPORT_MuxAlt3);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
-	PORT_SetPinMux(PORTB, PIN21_IDX, kPORT_MuxAsGpio);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
-	PORT_SetPinMux(PORTB, PIN22_IDX, kPORT_MuxAsGpio);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
-	PORT_SetPinMux(PORTE, PIN26_IDX, kPORT_MuxAsGpio);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+	PORT_SetPinMux(PORTB, PIN16_IDX, kPORT_MuxAlt3);
+	PORT_SetPinMux(PORTB, PIN17_IDX, kPORT_MuxAlt3);
+	PORT_SetPinMux(PORTB, PIN21_IDX, kPORT_MuxAsGpio);
+	PORT_SetPinMux(PORTB, PIN22_IDX, kPORT_MuxAsGpio);
+	PORT_SetPinMux(PORTE, PIN26_IDX, kPORT_MuxAsGpio);
 	
 	/* I2C0 SCL */
-	PORT_SetPinMux(PORTB, PIN2_IDX, kPORT_MuxAlt2);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+	PORT_SetPinMux(PORTB, PIN2_IDX, kPORT_MuxAlt2);
 	/* I2C0 SDA */
-	PORT_SetPinMux(PORTB, PIN3_IDX, kPORT_MuxAlt2);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+	PORT_SetPinMux(PORTB, PIN3_IDX, kPORT_MuxAlt2);
 	/* Status LED */
-	PORT_SetPinMux(PORTD, PIN15_IDX, kPORT_MuxAsGpio);            /* PORTB1 (pin 54) is configured as MII0_MDIO */
+	PORT_SetPinMux(PORTD, PIN15_IDX, kPORT_MuxAsGpio);
 
 	/* SDHC -- PORT_PCR_MUX(kPORT_PullUp) */
 	PORT_SetPinMux(PORTE, 0, kPORT_MuxAlt4); // | PORT_PCR_DSE_MASK);

@@ -75,20 +75,11 @@
 #define NUT_THREAD_NICRXSTACK   1024
 #endif
 
-#ifndef ETHMCUX_RX_BUFFERS
-#define ETHMCUX_RX_BUFFERS         32
-#endif
-#define ETHMCUX_RX_BUFSIZ          128
-
-#define ETHMCUX_TX_BUFFERS         2
-#ifndef ETHMCUX_TX_BUFSIZ
-#define ETHMCUX_TX_BUFSIZ          1536
-#endif
 
 #define ETHMCUX_ENET ENET
 #define ETHMCUX_PHY 0x01U
 #define CORE_CLK_FREQ CLOCK_GetFreq(kCLOCK_CoreSysClk)
-#define ETHMCUX_RXBD_NUM (32)
+#define ETHMCUX_RXBD_NUM (4)
 #define ETHMCUX_TXBD_NUM (4)
 #define ETHMCUX_RXBUFF_SIZE (ENET_FRAME_MAX_FRAMELEN)
 #define ETHMCUX_TXBUFF_SIZE (ENET_FRAME_MAX_FRAMELEN)
@@ -164,9 +155,11 @@ THREAD(EthMcuxRxThread, arg)
 	uint32_t length = 0;
 	enet_data_error_stats_t eErrStatic;
 	status_t status;
+	int sleep_time;
 
 	dev = arg;
 	ifn = (IFNET *) dev->dev_icb;
+	ETHMCUXINFO *ni = (ETHMCUXINFO *) dev->dev_dcb;
 	// ni = (ETHMCUXINFO *) dev->dev_dcb;
 
 	/* Run at high priority. */
@@ -175,7 +168,11 @@ THREAD(EthMcuxRxThread, arg)
 	/* Initialize the access mutex. */
 //    NutEventPost(&ni->ni_mutex);
 	for (;;) {
+		sleep_time = 10;
 		/* Get the Frame size */
+  	if (NutEventWait(&ni->ni_mutex, 1000))
+			continue;
+
 		status = ENET_GetRxFrameSize(&g_handle, &length);
 		/* Call ENET_ReadFrame when there is a received frame. */
 		if (length != 0) {
@@ -190,7 +187,7 @@ THREAD(EthMcuxRxThread, arg)
 //						NutNetBufFree(nb);
 //					} else {
 						(*ifn->if_recv) (dev, nb);
-						continue;
+						sleep_time = 0;
 //					}
 //
 				}
@@ -203,8 +200,10 @@ THREAD(EthMcuxRxThread, arg)
 			/* update the receive buffer. */
 			ENET_ReadFrame(ETHMCUX_ENET, &g_handle, NULL, 0);
 		}
+  	NutEventPost(&ni->ni_mutex);
 		/* Todo ideally use timed semaphore here */
-		NutSleep(10);
+		if (sleep_time)
+			NutSleep(sleep_time);
 	}
 }
 
@@ -228,6 +227,7 @@ int EthMcuxOutput(NUTDEVICE * dev, NETBUF * nb)
 	unsigned int sz;
 	uint8_t *buf = m_frame;
 
+	ETHMCUXINFO *ni = (ETHMCUXINFO *) dev->dev_dcb;
 
 	if ((sz = nb->nb_nw.sz + nb->nb_tp.sz + nb->nb_ap.sz) > ETHERMTU) {
 		return -1;
@@ -251,6 +251,9 @@ int EthMcuxOutput(NUTDEVICE * dev, NETBUF * nb)
 	 * After initialization we are waiting for a long time to give
 	 * the PHY a chance to establish an Ethernet link.
 	 */
+
+  if (NutEventWait(&ni->ni_mutex, 5000))
+		return -1;
 	for (;;) {
 		/* Send a multicast frame when the PHY is link up. */
 		if (!PHY_GetLinkStatus(ETHMCUX_ENET, ETHMCUX_PHY, &link)) {
@@ -263,6 +266,8 @@ int EthMcuxOutput(NUTDEVICE * dev, NETBUF * nb)
 		}
 		NutSleep(500);
 	}
+
+  NutEventPost(&ni->ni_mutex);
 	return rc;
 }
 
@@ -381,6 +386,9 @@ int EthMcuxInit(NUTDEVICE * dev)
 		(NUT_THREAD_NICRXSTACK * NUT_THREAD_STACK_MULT) + NUT_THREAD_STACK_ADD) == NULL) {
 		return -1;
 	}
+
+  NutEventPost(&ni->ni_mutex);
+
 	return 0;
 }
 

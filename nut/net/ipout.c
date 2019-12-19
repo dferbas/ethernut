@@ -160,7 +160,7 @@ int NutIpOutput(uint8_t proto, uint32_t dest, NETBUF * nb)
                 ip->ip_id = htons(nif->if_pkt_id);
                 nif->if_pkt_id++;
                 ip->ip_src = nif->if_local_ip;
-                ip->ip_ttl = 1;
+                ip->ip_ttl = 255;
                 ip->ip_sum = 0;
                 ip->ip_sum = NutIpChkSum(0, nb_clone->nb_nw.vp, nb_clone->nb_nw.sz);
                 if (nif->if_type == IFT_ETHER)
