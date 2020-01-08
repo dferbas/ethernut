@@ -64,7 +64,7 @@
 #define MODE_READ       kI2C_Read       /* Work as Receiver */
 #define MODE_WRITE      kI2C_Write       /* Work as Transmitter */
 
-// extern int dummy_dbg(int,int);
+extern int dummy_dbg(int,int);
 enum _i2c_flag_constants
 {
 /*! All flags which are cleared by the driver upon starting a transfer. */
@@ -72,51 +72,32 @@ enum _i2c_flag_constants
     kIrqFlags   = kI2C_GlobalInterruptEnable | kI2C_StartStopDetectInterruptEnable,
 };
 
-static status_t I2C_CheckAndClearError(I2C_Type *base, uint32_t status)
-{
-    status_t result = kStatus_Success;
-
-    /* Check arbitration lost. */
-    if (0U != (status & (uint32_t)kI2C_ArbitrationLostFlag))
-    {
-        /* Clear arbitration lost flag. */
-        base->S = (uint8_t)kI2C_ArbitrationLostFlag;
-        result  = kStatus_I2C_ArbitrationLost;
-    }
-    /* Check NAK */
-    else if (0U != (status & (uint32_t)kI2C_ReceiveNakFlag))
-    {
-        result = kStatus_I2C_Nak;
-    }
-    else
-    {
-    }
-
-    return result;
-}
-
 static void TwInterrupt(void *arg)
 {
 	NUTTWIBUS *bus = (NUTTWIBUS *) arg;
 	NUTTWIICB *icb = bus->bus_icb;
 	I2C_Type *i2c = (I2C_Type *)bus->bus_base;
-	status_t result;
+	uint32_t status_reg;
 
 	/* Clear pending flag. */
 	i2c->S = kI2C_IntPendingFlag;
 
-	result = I2C_CheckAndClearError(i2c, i2c->S);
+	status_reg = i2c->S;
 
-	/* Return if error. */
-
-	if (0 != result) {
-		if (result == kStatus_I2C_Nak) {
-			result = kStatus_I2C_Addr_Nak;
-			(void)I2C_MasterStop(i2c);
-			icb->tw_mm_err = result;
+	if (status_reg & (uint32_t)kI2C_ArbitrationLostFlag) {
+		/* Clear arbitration lost flag. */
+		i2c->S = kI2C_ArbitrationLostFlag; 
+		icb->tw_mm_err = kStatus_I2C_ArbitrationLost;
+		goto stop;
+	} else if (status_reg & (uint32_t)kI2C_ReceiveNakFlag) {
+		if (icb->tw_mm_rxlen != 1) {
+			icb->tw_mm_err = kStatus_I2C_Nak;
+			goto stop;
 		}
+	} else if (icb->tw_mm_err) {
 		goto finally;
 	}
+
 
 	if (icb->tw_mm_iadrlen) {
 		icb->tw_mm_iadrlen--;
@@ -133,11 +114,10 @@ static void TwInterrupt(void *arg)
 
 	if (icb->tw_mm_rxlen) {
 		if (icb->tw_mm_dir == MODE_WRITE) {
-			result = I2C_MasterRepeatedStart(i2c, icb->tw_mm_sla, kI2C_Read);
+			icb->tw_mm_err = I2C_MasterRepeatedStart(i2c, icb->tw_mm_sla, kI2C_Read);
 			/* Return if error. */
-			if (0 != result) {
-				icb->tw_mm_err = result;
-				goto finally;
+			if (icb->tw_mm_err) {
+				goto stop;
 			}
 			/* Read dummy to free the bus. */
 			icb->tw_mm_dir = MODE_READ;
@@ -156,28 +136,30 @@ static void TwInterrupt(void *arg)
 		}
 
 		if (icb->tw_mm_rxlen == 1U) {
-			I2C_MasterStop(i2c);
+			i2c->C1 &= ~(uint8_t)(I2C_C1_MST_MASK | I2C_C1_TX_MASK | I2C_C1_TXAK_MASK);
 		}
-
-		icb->tw_mm_rxlen--;
 
 		/* Receive character */
 		*(icb->tw_mm_rxbuf) = i2c->D;
 		icb->tw_mm_rxbuf++;
+		icb->tw_mm_rxlen--;
 
 		if (icb->tw_mm_rxlen == 1U) {
 			/* Suppress ACK signal in response if only one char to receive */
 			i2c->C1 |= I2C_C1_TXAK_MASK;
-		} else if (!icb->tw_mm_rxlen) {
-			goto finally;
 		}
-	
+
+		if (!icb->tw_mm_rxlen)
+			goto finally;
+
 		return;
 	}
 
-	if (i2c->C1 & I2C_C1_MST_MASK) {
-		I2C_MasterStop(i2c);
+stop:
+	if ((i2c->C1 & I2C_C1_MST_MASK)) {
+		i2c->C1 &= ~(uint8_t)(I2C_C1_MST_MASK | I2C_C1_TX_MASK | I2C_C1_TXAK_MASK);
 	}
+
 finally:
 	NutEventPostFromIrq(&icb->tw_mm_mtx);
 }
@@ -229,28 +211,33 @@ static int TwiMasterLow(NUTTWIBUS *bus, uint8_t sla, uint32_t iadr
   while (0U == (i2c->S & (uint8_t)kI2C_TransferCompleteFlag)) {
   }
 	/* Issue start and wait till transmission completed */
-	I2C_MasterStart(i2c, sla, icb->tw_mm_dir);
 
-	/* Enable module interrupt. */
-	NutIrqEnable(bus->bus_sig_ev);
-	I2C_EnableInterrupts(i2c, kI2C_GlobalInterruptEnable);
+	if (!I2C_MasterStart(i2c, sla, icb->tw_mm_dir)) {
+		/* Enable module interrupt. */
+		NutIrqEnable(bus->bus_sig_ev);
+		I2C_EnableInterrupts(i2c, kI2C_GlobalInterruptEnable);
 
-	/* Wait for transfer complete. */
-	if (NutEventWait(&icb->tw_mm_mtx, tmo)) {
-		icb->tw_mm_error = TWERR_TIMEOUT;
-	}
-	I2C_DisableInterrupts(i2c, kI2C_GlobalInterruptEnable);
-	NutIrqDisable(bus->bus_sig_ev);
+		/* Wait for transfer complete. */
+		if (NutEventWait(&icb->tw_mm_mtx, tmo)) {
+			icb->tw_mm_error = TWERR_TIMEOUT;
+		}
+		I2C_DisableInterrupts(i2c, kI2C_GlobalInterruptEnable);
+		NutIrqDisable(bus->bus_sig_ev);
 
-	/* Check for errors that may have been detected by the interrupt routine. */
-	if (icb->tw_mm_err) {
-		icb->tw_mm_error = icb->tw_mm_err;
+		/* Check for errors that may have been detected by the interrupt routine. */
+		if (icb->tw_mm_err) {
+			dummy_dbg(0xE0, icb->tw_mm_err);
+			icb->tw_mm_error = icb->tw_mm_err;
+		} else {
+			if (rxsiz)
+				rc = (int) (rxsiz - icb->tw_mm_rxlen);
+			else
+				rc = (int) (txlen - icb->tw_mm_txlen);
+		}
 	} else {
-		if (rxsiz)
-			rc = (int) (rxsiz - icb->tw_mm_rxlen);
-		else
-			rc = (int) (txlen - icb->tw_mm_txlen);
+		dummy_dbg(0xE1, 0xBB);
 	}
+	
 
 	/* Release the interface. */
 	NutEventPost(&bus->bus_mutex);

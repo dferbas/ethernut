@@ -188,11 +188,21 @@ static void NutBoardInitPinMux(void)
 	PORT_SetPinMux(PORTB, PIN21_IDX, kPORT_MuxAsGpio);
 	PORT_SetPinMux(PORTB, PIN22_IDX, kPORT_MuxAsGpio);
 	PORT_SetPinMux(PORTE, PIN26_IDX, kPORT_MuxAsGpio);
-	
+
+	const port_pin_config_t i2c_pin_config = {
+    kPORT_PullUp,                                            /* Internal pull-up resistor is enabled */
+    kPORT_FastSlewRate,                                      /* Fast slew rate is configured */
+    kPORT_PassiveFilterDisable,                              /* Passive filter is disabled */
+    kPORT_OpenDrainEnable,                                   /* Open drain is enabled */
+    kPORT_LowDriveStrength,                                  /* Low drive strength is configured */
+    kPORT_MuxAlt2,                                           /* Pin is configured as I2C0_SCL */
+    kPORT_UnlockRegister                                     /* Pin Control Register fields [15:0] are not locked */
+  };
+
 	/* I2C0 SCL */
-	PORT_SetPinMux(PORTB, PIN2_IDX, kPORT_MuxAlt2);
+	PORT_SetPinConfig(PORTB, PIN2_IDX, &i2c_pin_config);
 	/* I2C0 SDA */
-	PORT_SetPinMux(PORTB, PIN3_IDX, kPORT_MuxAlt2);
+	PORT_SetPinConfig(PORTB, PIN3_IDX, &i2c_pin_config);
 	/* Status LED */
 	PORT_SetPinMux(PORTD, PIN15_IDX, kPORT_MuxAsGpio);
 
