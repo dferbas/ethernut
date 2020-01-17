@@ -64,11 +64,17 @@ SECTIONS{
         
         *(.nutinit)
         *(.text .text.* .gnu.linkonce.t.*)
-        *(.rodata .rodata* .gnu.linkonce.r.*)
         *(.glue_7t)
         *(.glue_7)
 	*(.gcc_except_table)
 	    . = ALIGN(4);
+    } > FLASH0
+
+    .rodata : ALIGN (4)
+    {
+        *(.rodata)
+        *(.rodata.*)
+        *(.gnu.linkonce.r.*)
     } > FLASH0
 
     /* .ARM.exidx is sorted, so has to go in its own output section. */
@@ -143,7 +149,7 @@ SECTIONS{
         _pspstack_start = .;
         KEEP(*(.psp_stack .psp_stack.*));
         _pspstack_end = .;
-	PROVIDE (__heap_start = .);
+        PROVIDE (__heap_start = .);
     } > SRAM0
 /*
     .heap (NOLOAD):

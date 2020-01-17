@@ -170,8 +170,8 @@ THREAD(EthMcuxRxThread, arg)
 	for (;;) {
 		sleep_time = 10;
 		/* Get the Frame size */
-  	if (NutEventWait(&ni->ni_mutex, 1000))
-			continue;
+	//	if (NutEventWait(&ni->ni_mutex, 1000))
+	//		continue;
 
 		status = ENET_GetRxFrameSize(&g_handle, &length);
 		/* Call ENET_ReadFrame when there is a received frame. */
@@ -190,8 +190,9 @@ THREAD(EthMcuxRxThread, arg)
 						sleep_time = 0;
 //					}
 //
+				} else {
+					NutNetBufFree(nb);
 				}
-				NutNetBufFree(nb);
 			}
 		} else if (status == kStatus_ENET_RxFrameError) {
 			/* Update the received buffer when error happened. */
@@ -200,7 +201,7 @@ THREAD(EthMcuxRxThread, arg)
 			/* update the receive buffer. */
 			ENET_ReadFrame(ETHMCUX_ENET, &g_handle, NULL, 0);
 		}
-  	NutEventPost(&ni->ni_mutex);
+//  	NutEventPost(&ni->ni_mutex);
 		/* Todo ideally use timed semaphore here */
 		if (sleep_time)
 			NutSleep(sleep_time);
@@ -252,8 +253,8 @@ int EthMcuxOutput(NUTDEVICE * dev, NETBUF * nb)
 	 * the PHY a chance to establish an Ethernet link.
 	 */
 
-  if (NutEventWait(&ni->ni_mutex, 5000))
-		return -1;
+//  if (NutEventWait(&ni->ni_mutex, 5000))
+//		return -1;
 	for (;;) {
 		/* Send a multicast frame when the PHY is link up. */
 		if (!PHY_GetLinkStatus(ETHMCUX_ENET, ETHMCUX_PHY, &link)) {
@@ -267,7 +268,7 @@ int EthMcuxOutput(NUTDEVICE * dev, NETBUF * nb)
 		NutSleep(500);
 	}
 
-  NutEventPost(&ni->ni_mutex);
+//  NutEventPost(&ni->ni_mutex);
 	return rc;
 }
 

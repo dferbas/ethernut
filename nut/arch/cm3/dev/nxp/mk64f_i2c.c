@@ -64,7 +64,6 @@
 #define MODE_READ       kI2C_Read       /* Work as Receiver */
 #define MODE_WRITE      kI2C_Write       /* Work as Transmitter */
 
-extern int dummy_dbg(int,int);
 enum _i2c_flag_constants
 {
 /*! All flags which are cleared by the driver upon starting a transfer. */
@@ -226,7 +225,6 @@ static int TwiMasterLow(NUTTWIBUS *bus, uint8_t sla, uint32_t iadr
 
 		/* Check for errors that may have been detected by the interrupt routine. */
 		if (icb->tw_mm_err) {
-			dummy_dbg(0xE0, icb->tw_mm_err);
 			icb->tw_mm_error = icb->tw_mm_err;
 		} else {
 			if (rxsiz)
@@ -234,8 +232,6 @@ static int TwiMasterLow(NUTTWIBUS *bus, uint8_t sla, uint32_t iadr
 			else
 				rc = (int) (txlen - icb->tw_mm_txlen);
 		}
-	} else {
-		dummy_dbg(0xE1, 0xBB);
 	}
 	
 
