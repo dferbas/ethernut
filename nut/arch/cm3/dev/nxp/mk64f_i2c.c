@@ -100,6 +100,8 @@ static void TwInterrupt(void *arg)
 
 	if (icb->tw_mm_iadrlen) {
 		icb->tw_mm_iadrlen--;
+
+		dummy_debug(0xAA, *(icb->tw_mm_iadr));
 		i2c->D = *(icb->tw_mm_iadr)++;
 		return;
 	}
@@ -131,6 +133,11 @@ static void TwInterrupt(void *arg)
 			/* Do dummy read. */
 			dummy = i2c->D;
 			icb->tw_mm_rxbegin = 1;
+
+			if (icb->tw_mm_rxlen == 1U) {
+				/* Issue NACK on read. */
+				i2c->C1 |= I2C_C1_TXAK_MASK;
+			}
 			return;
 		}
 
@@ -163,7 +170,7 @@ finally:
 	NutEventPostFromIrq(&icb->tw_mm_mtx);
 }
 
-static int TwiMasterLow(NUTTWIBUS *bus, uint8_t sla, uint32_t iadr
+int TwiMasterLow(NUTTWIBUS *bus, uint8_t sla, uint32_t iadr
 		, uint8_t iadrlen, CONST void *txdata, uint16_t txlen, void *rxdata
 		, uint16_t rxsiz, uint32_t tmo)
 {
@@ -186,16 +193,16 @@ static int TwiMasterLow(NUTTWIBUS *bus, uint8_t sla, uint32_t iadr
 	icb->tw_mm_sla = sla;
 	icb->tw_mm_iadrlen = iadrlen;
 	if (iadrlen) {
-		/* LE to BE */
-		uint32_t iadr_be = __builtin_bswap32(iadr);
-		/* Big-endian machine! */
-		icb->tw_mm_iadr = ((uint8_t*) &iadr_be) + 4 - iadrlen;
+		iadr = __builtin_bswap32(iadr);
+		icb->tw_mm_iadr = ((uint8_t *)&iadr) + 4 - iadrlen;
+		dummy_debug(0xB1, icb->tw_mm_iadr);
 	}
 	icb->tw_mm_txbuf = (uint8_t*) txdata;
 	icb->tw_mm_txlen = txlen;
 	icb->tw_mm_rxbuf = rxdata;
 	icb->tw_mm_rxlen = rxsiz;
 	icb->tw_mm_err = TWERR_OK;
+	icb->tw_mm_rxbegin = 0;
 
 	if (icb->tw_mm_iadrlen | icb->tw_mm_txlen) {
 		icb->tw_mm_dir = MODE_WRITE;
