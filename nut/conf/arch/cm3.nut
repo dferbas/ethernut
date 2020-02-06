@@ -284,6 +284,7 @@ nutarch_cm3 =
             "cm3/dev/nxp/vendor/fsl_sdmmc_event.c",
             "cm3/dev/nxp/vendor/fsl_i2c.c",
             "cm3/dev/nxp/vendor/fsl_uart.c",
+            "cm3/dev/nxp/vendor/fsl_flexbus.c",
         },
         options =
         {

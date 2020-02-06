@@ -10,6 +10,7 @@
 #include <arch/cm3/nxp/vendor/fsl_port.h>
 #include <arch/cm3/nxp/vendor/fsl_sysmpu.h>
 #include <arch/cm3/nxp/vendor/fsl_gpio.h>
+#include <arch/cm3/nxp/vendor/fsl_flexbus.h>
 
 #ifndef DEV_ETHER
 #include <dev/eth_mcux.h>

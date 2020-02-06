@@ -453,6 +453,8 @@ static int Mk64fUsartInit(void)
 		return -1;
 	}
 
+	// UART_EnableInterrupts(MK64F_USART_BASE, kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable);
+
 	if (NutRegisterIrqHandler(&sig_USART, Mk64fUsartInterrupts, &dcb_usart)
      || NutIrqEnable(&sig_USART)) {
 		return -1;
@@ -523,14 +525,13 @@ static void Mk64fUsartTxStart(void)
 	}
 #endif
 	/* Enable Transmitter Ready Interrupt */
-	UART_EnableInterrupts(MK64F_USART_BASE,
-			kUART_TxDataRegEmptyInterruptEnable | kUART_TransmissionCompleteInterruptEnable);
+	SET_TXRDY_INTERRUPT();
 }
 
 static void Mk64fUsartRxStart(void)
 {
 	/* Enable Receive Ready Interrupt */
-	UART_EnableInterrupts(MK64F_USART_BASE, kUART_RxDataRegFullInterruptEnable);
+	SET_RXRDY_INTERRUPT();
 
 	/*
 	 * Do any required software flow control.

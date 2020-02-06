@@ -26,6 +26,7 @@ MEMORY
   SRAM0 (rwx) : ORIGIN = 0x20000000, LENGTH = 0x30000 /* 192K bytes (alias RAM) */  
   SRAM_LOWER (rwx) : ORIGIN = 0x1fff0000, LENGTH = 0x10000 /* 64K bytes (alias RAM2) */  
   FLEX_RAM (rwx) : ORIGIN = 0x14000000, LENGTH = 0x1000 /* 4K bytes (alias RAM3) */  
+  EXT_RAM (rwx) : ORIGIN = 0x80000000, LENGTH = 0x80000 /* 512K ext ram */  
 }
 
 
@@ -40,6 +41,8 @@ _ramfunc_start = 0;
 _ramfunc_end   = 0;
 _ramfunc_load  = 0;
 _ccm_used      = 0;
+_extram_start = ORIGIN(EXT_RAM);
+_extram_end = ORIGIN(EXT_RAM) + LENGTH(EXT_RAM);
 
 SECTIONS{
     .bootloader (NOLOAD):

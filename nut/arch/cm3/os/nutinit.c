@@ -142,6 +142,14 @@ extern void *_ramend;
 
 #endif
 
+/* Extram */
+extern void *_extram_start;
+extern void *_extram_end;
+
+#define EXTRAM_START  &_extram_start
+#define EXTRAM_END  &_extram_end
+#define EXTRAM_SIZE  ((uintptr_t)(EXTRAM_END) - (uintptr_t)(EXTRAM_START))
+
 #if !defined(__arm__) && !defined(__cplusplus)
 extern void NutAppMain(void *arg) __attribute__ ((noreturn));
 #else
@@ -312,6 +320,7 @@ static const uint32_t stack_end = (uint32_t)&_stack_end;
 #endif
     /* Initialize our heap memory. */
     NutHeapAdd(HEAP_START, HEAP_SIZE & ~3);
+    NutHeapAdd(EXTRAM_START, EXTRAM_SIZE & ~3);
 
     /* Initialize caches just before starting main, at least after load phase.
      *  E.g. see DM00169764, 4.2 Tips

@@ -186,7 +186,7 @@ int TwiMasterLow(NUTTWIBUS *bus, uint8_t sla, uint32_t iadr
 	/* This routine is marked reentrant, so lock the interface. */
 	if (NutEventWait(&bus->bus_mutex, tmo)) {
 		icb->tw_mm_error = TWERR_IF_LOCKED;
-		return rc;
+		return -2;
 	}
 
 	/* Fetch transfer parameters for current transaction */
@@ -217,8 +217,11 @@ int TwiMasterLow(NUTTWIBUS *bus, uint8_t sla, uint32_t iadr
   while (0U == (i2c->S & (uint8_t)kI2C_TransferCompleteFlag)) {
   }
 	/* Issue start and wait till transmission completed */
-
-	if (!I2C_MasterStart(i2c, sla, icb->tw_mm_dir)) {
+	
+	while (I2C_MasterStart(i2c, sla, icb->tw_mm_dir)) {
+		NutSleep(10);
+	}
+	{
 		/* Enable module interrupt. */
 		NutIrqEnable(bus->bus_sig_ev);
 		I2C_EnableInterrupts(i2c, kI2C_GlobalInterruptEnable);

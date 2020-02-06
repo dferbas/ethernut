@@ -217,7 +217,88 @@ static void NutBoardInitPinMux(void)
 	/* SDHC GPIO Card Detect pin */
 	PORT_SetPinMux(PORTC, 3, kPORT_MuxAsGpio);
 
-
+	/* Extram */
+	/* PORTB10 (pin 91) is configured as FB_AD19 */
+	PORT_SetPinMux(PORTB, 10U, kPORT_MuxAlt5);
+	/* PORTB11 (pin 92) is configured as FB_AD18 */
+	PORT_SetPinMux(PORTB, 11U, kPORT_MuxAlt5);
+	/* PORTB16 (pin 95) is configured as FB_AD17 */
+	PORT_SetPinMux(PORTB, 16U, kPORT_MuxAlt5);
+	/* PORTB17 (pin 96) is configured as FB_AD16 */
+	PORT_SetPinMux(PORTB, 17U, kPORT_MuxAlt5);
+	/* PORTB18 (pin 97) is configured as FB_AD15 */
+	PORT_SetPinMux(PORTB, 18U, kPORT_MuxAlt5);
+	/* PORTB19 (pin 98) is configured as FB_OE_b */
+	PORT_SetPinMux(PORTB, 19U, kPORT_MuxAlt5);
+	/* PORTB20 (pin 99) is configured as FB_AD31 */
+	PORT_SetPinMux(PORTB, 20U, kPORT_MuxAlt5);
+	/* PORTB21 (pin 100) is configured as FB_AD30 */
+	PORT_SetPinMux(PORTB, 21U, kPORT_MuxAlt5);
+	/* PORTB22 (pin 101) is configured as FB_AD29 */
+	PORT_SetPinMux(PORTB, 22U, kPORT_MuxAlt5);
+	/* PORTB23 (pin 102) is configured as FB_AD28 */
+	PORT_SetPinMux(PORTB, 23U, kPORT_MuxAlt5);
+	/* PORTB6 (pin 87) is configured as FB_AD23 */
+	PORT_SetPinMux(PORTB, 6U, kPORT_MuxAlt5);
+	/* PORTB7 (pin 88) is configured as FB_AD22 */
+	PORT_SetPinMux(PORTB, 7U, kPORT_MuxAlt5);
+	/* PORTB8 (pin 89) is configured as FB_AD21 */
+	PORT_SetPinMux(PORTB, 8U, kPORT_MuxAlt5);
+	/* PORTB9 (pin 90) is configured as FB_AD20 */
+	PORT_SetPinMux(PORTB, 9U, kPORT_MuxAlt5);
+	/* PORTC0 (pin 103) is configured as FB_AD14 */
+	PORT_SetPinMux(PORTC, 0U, kPORT_MuxAlt5);
+	/* PORTC1 (pin 104) is configured as FB_AD13 */
+	PORT_SetPinMux(PORTC, 1U, kPORT_MuxAlt5);
+	/* PORTC10 (pin 115) is configured as FB_AD5 */
+	PORT_SetPinMux(PORTC, 10U, kPORT_MuxAlt5);
+	/* PORTC11 (pin 116) is configured as FB_RW_b */
+	PORT_SetPinMux(PORTC, 11U, kPORT_MuxAlt5);
+	/* PORTC12 (pin 117) is configured as FB_AD27 */
+	PORT_SetPinMux(PORTC, 12U, kPORT_MuxAlt5);
+	/* PORTC13 (pin 118) is configured as FB_AD26 */
+	PORT_SetPinMux(PORTC, 13U, kPORT_MuxAlt5);
+	/* PORTC14 (pin 119) is configured as FB_AD25 */
+	PORT_SetPinMux(PORTC, 14U, kPORT_MuxAlt5);
+	/* PORTC15 (pin 120) is configured as FB_AD24 */
+	PORT_SetPinMux(PORTC, 15U, kPORT_MuxAlt5);
+	/* PORTC16 (pin 123) is configured as FB_CS5_b */
+	PORT_SetPinMux(PORTC, 16U, kPORT_MuxAlt5);
+	/* PORTC17 (pin 124) is configured as FB_CS4_b */
+	PORT_SetPinMux(PORTC, 17U, kPORT_MuxAlt5);
+	/* PORTC2 (pin 105) is configured as FB_AD12 */
+	PORT_SetPinMux(PORTC, 2U, kPORT_MuxAlt5);
+	/* PORTC4 (pin 109) is configured as FB_AD11 */
+	PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt5);
+	/* PORTC5 (pin 110) is configured as FB_AD10 */
+	PORT_SetPinMux(PORTC, 5U, kPORT_MuxAlt5);
+	/* PORTC6 (pin 111) is configured as FB_AD9 */
+	PORT_SetPinMux(PORTC, 6U, kPORT_MuxAlt5);
+	/* PORTC7 (pin 112) is configured as FB_AD8 */
+	PORT_SetPinMux(PORTC, 7U, kPORT_MuxAlt5);
+	/* PORTC8 (pin 113) is configured as FB_AD7 */
+	PORT_SetPinMux(PORTC, 8U, kPORT_MuxAlt5);
+	/* PORTC9 (pin 114) is configured as FB_AD6 */
+	PORT_SetPinMux(PORTC, 9U, kPORT_MuxAlt5);
+	/* PORTD1 (pin 128) is configured as FB_CS0_b */
+	PORT_SetPinMux(PORTD, 1U, kPORT_MuxAlt5);
+	/* PORTD10 (pin 139) is configured as FB_A18 */
+	PORT_SetPinMux(PORTD, 10U, kPORT_MuxAlt6);
+	/* PORTD11 (pin 140) is configured as FB_A19 */
+	PORT_SetPinMux(PORTD, 11U, kPORT_MuxAlt6);
+	/* PORTD2 (pin 129) is configured as FB_AD4 */
+	PORT_SetPinMux(PORTD, 2U, kPORT_MuxAlt5);
+	/* PORTD3 (pin 130) is configured as FB_AD3 */
+	PORT_SetPinMux(PORTD, 3U, kPORT_MuxAlt5);
+	/* PORTD4 (pin 131) is configured as FB_AD2 */
+	PORT_SetPinMux(PORTD, 4U, kPORT_MuxAlt5);
+	/* PORTD5 (pin 132) is configured as FB_AD1 */
+	PORT_SetPinMux(PORTD, 5U, kPORT_MuxAlt5);
+	/* PORTD8 (pin 137) is configured as FB_A16 */
+	PORT_SetPinMux(PORTD, 8U, kPORT_MuxAlt6);
+	/* PORTD9 (pin 138) is configured as FB_A17 */
+	PORT_SetPinMux(PORTD, 9U, kPORT_MuxAlt6);
+	/* 40 ports */
 
 	SIM->SOPT5 = ((SIM->SOPT5 &
 		(~(SIM_SOPT5_UART0TXSRC_MASK)))                          /* Mask bits to zero which are setting */
@@ -227,22 +308,61 @@ static void NutBoardInitPinMux(void)
 
 void NutBoardInit(void)
 {
-		/* Port A Clock Gate Control: Clock enabled */
-		CLOCK_EnableClock(kCLOCK_PortA);
-		/* Port B Clock Gate Control: Clock enabled */
-		CLOCK_EnableClock(kCLOCK_PortB);
-		/* Port C Clock Gate Control: Clock enabled */
-		CLOCK_EnableClock(kCLOCK_PortC);
-		/* Port D Clock Gate Control: Clock enabled */
-		CLOCK_EnableClock(kCLOCK_PortD);
-		/* Port E Clock Gate Control: Clock enabled */
-		CLOCK_EnableClock(kCLOCK_PortE);
+	flexbus_config_t fb_config;
+
+	/* Port A Clock Gate Control: Clock enabled */
+	CLOCK_EnableClock(kCLOCK_PortA);
+	/* Port B Clock Gate Control: Clock enabled */
+	CLOCK_EnableClock(kCLOCK_PortB);
+	/* Port C Clock Gate Control: Clock enabled */
+	CLOCK_EnableClock(kCLOCK_PortC);
+	/* Port D Clock Gate Control: Clock enabled */
+	CLOCK_EnableClock(kCLOCK_PortD);
+	/* Port E Clock Gate Control: Clock enabled */
+	CLOCK_EnableClock(kCLOCK_PortE);
 
 	NutBoardInitGpio();
 	NutBoardInitPinMux();
+/* fbConfig->chip                   = 0;
+   fbConfig->writeProtect           = 0;
+   fbConfig->burstWrite             = 0;
+   fbConfig->burstRead              = 0;
+   fbConfig->byteEnableMode         = 0;
+   fbConfig->autoAcknowledge        = true;
+   fbConfig->extendTransferAddress  = 0;
+   fbConfig->secondaryWaitStates    = 0;
+   fbConfig->byteLaneShift          = kFLEXBUS_NotShifted;
+   fbConfig->writeAddressHold       = kFLEXBUS_Hold1Cycle;
+   fbConfig->readAddressHold        = kFLEXBUS_Hold1Or0Cycles;
+   fbConfig->addressSetup           = kFLEXBUS_FirstRisingEdge;
+   fbConfig->portSize               = kFLEXBUS_1Byte;
+   fbConfig->group1MultiplexControl = kFLEXBUS_MultiplexGroup1_FB_ALE;
+   fbConfig->group2MultiplexControl = kFLEXBUS_MultiplexGroup2_FB_CS4 ;
+   fbConfig->group3MultiplexControl = kFLEXBUS_MultiplexGroup3_FB_CS5;
+   fbConfig->group4MultiplexControl = kFLEXBUS_MultiplexGroup4_FB_TBST;
+   fbConfig->group5MultiplexControl = kFLEXBUS_MultiplexGroup5_FB_TA;
+ */
+
+	FLEXBUS_GetDefaultConfig(&fb_config);
+	fb_config.waitStates = 1U;
+	fb_config.chipBaseAddress = 0x80000000L;
+	fb_config.chipBaseAddressMask = 7U;
+  fb_config.portSize  = kFLEXBUS_2Bytes;
+  fb_config.byteEnableMode         = 1;
+  //fb_config.writeAddressHold       = kFLEXBUS_Hold2Cycles;
+	//fb_config.group1MultiplexControl = kFLEXBUS_MultiplexGroup1_FB_ALE;
+	fb_config.group2MultiplexControl = kFLEXBUS_MultiplexGroup2_FB_BE_31_24 ;
+	fb_config.group3MultiplexControl = kFLEXBUS_MultiplexGroup3_FB_BE_23_16;
+	//fb_config.group4MultiplexControl = kFLEXBUS_MultiplexGroup4_FB_TBST;
+	//fb_config.group5MultiplexControl = kFLEXBUS_MultiplexGroup5_FB_TA;
+	FLEXBUS_Init(FB, &fb_config);
 	// oldPinInit();
 
 	SYSMPU_Enable(SYSMPU, false);
+
+	uint64_t *ptr = (uint64_t *)(0x80000000L);
+	*ptr = 0xF1E2D3C4;
+	dummy_debug(0xEE, *ptr);
 }
 
 /* clang-format off */

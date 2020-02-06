@@ -48,6 +48,7 @@
 #include <sys/event.h>
 #include <sys/timer.h>
 #include <sys/confnet.h>
+#include <sys/mutex.h>
 
 #include <netinet/if_ether.h>
 #include <net/ether.h>
@@ -118,7 +119,7 @@ struct _ETHMCUXINFO {
 #endif
 		HANDLE volatile ni_rx_rdy;  /*!< Receiver event queue. */
 		HANDLE volatile ni_tx_rdy;  /*!< Transmitter event queue. */
-		HANDLE ni_mutex;            /*!< Access mutex semaphore. */
+		MUTEX ni_mutex;            /*!< Access mutex semaphore. */
 		volatile int ni_tx_queued;  /*!< Number of packets in transmission queue. */
 		volatile int ni_tx_quelen;  /*!< Number of bytes in transmission queue not sent. */
 		volatile int ni_insane;     /*!< Set by error detection. */
@@ -170,8 +171,8 @@ THREAD(EthMcuxRxThread, arg)
 	for (;;) {
 		sleep_time = 10;
 		/* Get the Frame size */
-	//	if (NutEventWait(&ni->ni_mutex, 1000))
-	//		continue;
+
+		NutMutexLock(&ni->ni_mutex);
 
 		status = ENET_GetRxFrameSize(&g_handle, &length);
 		/* Call ENET_ReadFrame when there is a received frame. */
@@ -201,8 +202,8 @@ THREAD(EthMcuxRxThread, arg)
 			/* update the receive buffer. */
 			ENET_ReadFrame(ETHMCUX_ENET, &g_handle, NULL, 0);
 		}
-//  	NutEventPost(&ni->ni_mutex);
-		/* Todo ideally use timed semaphore here */
+		NutMutexUnlock(&ni->ni_mutex);
+
 		if (sleep_time)
 			NutSleep(sleep_time);
 	}
@@ -253,8 +254,8 @@ int EthMcuxOutput(NUTDEVICE * dev, NETBUF * nb)
 	 * the PHY a chance to establish an Ethernet link.
 	 */
 
-//  if (NutEventWait(&ni->ni_mutex, 5000))
-//		return -1;
+  NutMutexLock(&ni->ni_mutex);
+
 	for (;;) {
 		/* Send a multicast frame when the PHY is link up. */
 		if (!PHY_GetLinkStatus(ETHMCUX_ENET, ETHMCUX_PHY, &link)) {
@@ -268,7 +269,7 @@ int EthMcuxOutput(NUTDEVICE * dev, NETBUF * nb)
 		NutSleep(500);
 	}
 
-//  NutEventPost(&ni->ni_mutex);
+  NutMutexUnlock(&ni->ni_mutex);
 	return rc;
 }
 
@@ -388,7 +389,7 @@ int EthMcuxInit(NUTDEVICE * dev)
 		return -1;
 	}
 
-  NutEventPost(&ni->ni_mutex);
+  NutMutexInit(&ni->ni_mutex);
 
 	return 0;
 }
