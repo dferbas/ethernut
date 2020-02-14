@@ -306,6 +306,489 @@ static void NutBoardInitPinMux(void)
 		);
 }
 
+
+void BOARD_InitPins(void)
+{
+    /* Port A Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortA);
+    /* Port B Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortB);
+    /* Port C Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortC);
+    /* Port D Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortD);
+    /* Port E Clock Gate Control: Clock enabled */
+    CLOCK_EnableClock(kCLOCK_PortE);
+
+    gpio_pin_config_t ETH_PHY_RESET_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTA4 (pin 54)  */
+    GPIO_PinInit(BOARD_INITPINS_ETH_PHY_RESET_GPIO, BOARD_INITPINS_ETH_PHY_RESET_PIN, &ETH_PHY_RESET_config);
+
+    gpio_pin_config_t OPTO_INP_0_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTA6 (pin 58)  */
+    GPIO_PinInit(BOARD_INITPINS_OPTO_INP_0_GPIO, BOARD_INITPINS_OPTO_INP_0_PIN, &OPTO_INP_0_config);
+
+    gpio_pin_config_t OPTO_INP_1_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTA7 (pin 59)  */
+    GPIO_PinInit(BOARD_INITPINS_OPTO_INP_1_GPIO, BOARD_INITPINS_OPTO_INP_1_PIN, &OPTO_INP_1_config);
+
+    gpio_pin_config_t OPTO_INP_2_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTA8 (pin 60)  */
+    GPIO_PinInit(BOARD_INITPINS_OPTO_INP_2_GPIO, BOARD_INITPINS_OPTO_INP_2_PIN, &OPTO_INP_2_config);
+
+    gpio_pin_config_t unused_1_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTA28 (pin 79)  */
+    GPIO_PinInit(BOARD_INITPINS_unused_1_GPIO, BOARD_INITPINS_unused_1_PIN, &unused_1_config);
+
+    gpio_pin_config_t RS485_RE_1_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTB4 (pin 85)  */
+    GPIO_PinInit(BOARD_INITPINS_RS485_RE_1_GPIO, BOARD_INITPINS_RS485_RE_1_PIN, &RS485_RE_1_config);
+
+    gpio_pin_config_t RS485_DE_1_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTB5 (pin 86)  */
+    GPIO_PinInit(BOARD_INITPINS_RS485_DE_1_GPIO, BOARD_INITPINS_RS485_DE_1_PIN, &RS485_DE_1_config);
+
+    gpio_pin_config_t SDHC_CD_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTC3 (pin 106)  */
+    GPIO_PinInit(BOARD_INITPINS_SDHC_CD_GPIO, BOARD_INITPINS_SDHC_CD_PIN, &SDHC_CD_config);
+
+    gpio_pin_config_t RS485_RE_2_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTC18 (pin 125)  */
+    GPIO_PinInit(BOARD_INITPINS_RS485_RE_2_GPIO, BOARD_INITPINS_RS485_RE_2_PIN, &RS485_RE_2_config);
+
+    gpio_pin_config_t RS485_DE_2_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTC19 (pin 126)  */
+    GPIO_PinInit(BOARD_INITPINS_RS485_DE_2_GPIO, BOARD_INITPINS_RS485_DE_2_PIN, &RS485_DE_2_config);
+
+    gpio_pin_config_t unused_0_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTD0 (pin 127)  */
+    GPIO_PinInit(BOARD_INITPINS_unused_0_GPIO, BOARD_INITPINS_unused_0_PIN, &unused_0_config);
+
+    gpio_pin_config_t BUTTON_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTD6 (pin 133)  */
+    GPIO_PinInit(BOARD_INITPINS_BUTTON_GPIO, BOARD_INITPINS_BUTTON_PIN, &BUTTON_config);
+
+    gpio_pin_config_t RELAY_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTD7 (pin 136)  */
+    GPIO_PinInit(BOARD_INITPINS_RELAY_GPIO, BOARD_INITPINS_RELAY_PIN, &RELAY_config);
+
+    gpio_pin_config_t LED_STATUS_R_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTD12 (pin 141)  */
+    GPIO_PinInit(BOARD_INITPINS_LED_STATUS_R_GPIO, BOARD_INITPINS_LED_STATUS_R_PIN, &LED_STATUS_R_config);
+
+    gpio_pin_config_t LED_SENSORS_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTD13 (pin 142)  */
+    GPIO_PinInit(BOARD_INITPINS_LED_SENSORS_GPIO, BOARD_INITPINS_LED_SENSORS_PIN, &LED_SENSORS_config);
+
+    gpio_pin_config_t LED_RS485_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTD14 (pin 143)  */
+    GPIO_PinInit(BOARD_INITPINS_LED_RS485_GPIO, BOARD_INITPINS_LED_RS485_PIN, &LED_RS485_config);
+
+    gpio_pin_config_t LED_STATUS_G_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTD15 (pin 144)  */
+    GPIO_PinInit(BOARD_INITPINS_LED_STATUS_G_GPIO, BOARD_INITPINS_LED_STATUS_G_PIN, &LED_STATUS_G_config);
+
+    gpio_pin_config_t RS485_RE_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTE6 (pin 9)  */
+    GPIO_PinInit(BOARD_INITPINS_RS485_RE_GPIO, BOARD_INITPINS_RS485_RE_PIN, &RS485_RE_config);
+
+    gpio_pin_config_t RS485_DE_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTE7 (pin 10)  */
+    GPIO_PinInit(BOARD_INITPINS_RS485_DE_GPIO, BOARD_INITPINS_RS485_DE_PIN, &RS485_DE_config);
+
+    gpio_pin_config_t RS232_SHTDWN_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTE12 (pin 15)  */
+    GPIO_PinInit(BOARD_INITPINS_RS232_SHTDWN_GPIO, BOARD_INITPINS_RS232_SHTDWN_PIN, &RS232_SHTDWN_config);
+
+    gpio_pin_config_t RS232_DTR_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTE26 (pin 47)  */
+    GPIO_PinInit(BOARD_INITPINS_RS232_DTR_GPIO, BOARD_INITPINS_RS232_DTR_PIN, &RS232_DTR_config);
+
+    gpio_pin_config_t RS232_RI_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTE27 (pin 48)  */
+    GPIO_PinInit(BOARD_INITPINS_RS232_RI_GPIO, BOARD_INITPINS_RS232_RI_PIN, &RS232_RI_config);
+
+    gpio_pin_config_t RS232_STATUS_config = {
+        .pinDirection = kGPIO_DigitalInput,
+        .outputLogic = 1U
+    };
+    /* Initialize GPIO functionality on pin PTE28 (pin 49)  */
+    GPIO_PinInit(BOARD_INITPINS_RS232_STATUS_GPIO, BOARD_INITPINS_RS232_STATUS_PIN, &RS232_STATUS_config);
+
+    /* PORTA0 (pin 50) is configured as JTAG_TCLK */
+    PORT_SetPinMux(PORTA, 0U, kPORT_MuxAlt7);
+
+    /* PORTA1 (pin 51) is configured as UART0_RX */
+    PORT_SetPinMux(PORTA, 1U, kPORT_MuxAlt2);
+
+    /* PORTA10 (pin 62) is configured as MII0_RXD2 */
+    PORT_SetPinMux(PORTA, 10U, kPORT_MuxAlt4);
+
+    /* PORTA11 (pin 63) is configured as MII0_RXCLK */
+    PORT_SetPinMux(PORTA, 11U, kPORT_MuxAlt4);
+
+    /* PORTA12 (pin 64) is configured as MII0_RXD1 */
+    PORT_SetPinMux(PORTA, 12U, kPORT_MuxAlt4);
+
+    /* PORTA13 (pin 65) is configured as MII0_RXD0 */
+    PORT_SetPinMux(PORTA, 13U, kPORT_MuxAlt4);
+
+    /* PORTA14 (pin 66) is configured as MII0_RXDV */
+    PORT_SetPinMux(PORTA, 14U, kPORT_MuxAlt4);
+
+    /* PORTA15 (pin 67) is configured as MII0_TXEN */
+    PORT_SetPinMux(PORTA, 15U, kPORT_MuxAlt4);
+
+    /* PORTA16 (pin 68) is configured as MII0_TXD0 */
+    PORT_SetPinMux(PORTA, 16U, kPORT_MuxAlt4);
+
+    /* PORTA17 (pin 69) is configured as MII0_TXD1 */
+    PORT_SetPinMux(PORTA, 17U, kPORT_MuxAlt4);
+
+    /* PORTA18 (pin 72) is configured as EXTAL0 */
+    PORT_SetPinMux(PORTA, 18U, kPORT_PinDisabledOrAnalog);
+
+    /* PORTA19 (pin 73) is configured as XTAL0 */
+    PORT_SetPinMux(PORTA, 19U, kPORT_PinDisabledOrAnalog);
+
+    /* PORTA2 (pin 52) is configured as UART0_TX */
+    PORT_SetPinMux(PORTA, 2U, kPORT_MuxAlt2);
+
+    /* PORTA24 (pin 75) is configured as MII0_TXD2 */
+    PORT_SetPinMux(PORTA, 24U, kPORT_MuxAlt4);
+
+    /* PORTA25 (pin 76) is configured as MII0_TXCLK */
+    PORT_SetPinMux(PORTA, 25U, kPORT_MuxAlt4);
+
+    /* PORTA26 (pin 77) is configured as MII0_TXD3 */
+    PORT_SetPinMux(PORTA, 26U, kPORT_MuxAlt4);
+
+    /* PORTA27 (pin 78) is configured as MII0_CRS */
+    PORT_SetPinMux(PORTA, 27U, kPORT_MuxAlt4);
+
+    /* PORTA28 (pin 79) is configured as PTA28 */
+    PORT_SetPinMux(BOARD_INITPINS_unused_1_PORT, BOARD_INITPINS_unused_1_PIN, kPORT_MuxAsGpio);
+
+    /* PORTA29 (pin 80) is configured as MII0_COL */
+    PORT_SetPinMux(PORTA, 29U, kPORT_MuxAlt4);
+
+    /* PORTA3 (pin 53) is configured as JTAG_TMS */
+    PORT_SetPinMux(PORTA, 3U, kPORT_MuxAlt7);
+
+    /* PORTA4 (pin 54) is configured as PTA4 */
+    PORT_SetPinMux(BOARD_INITPINS_ETH_PHY_RESET_PORT, BOARD_INITPINS_ETH_PHY_RESET_PIN, kPORT_MuxAsGpio);
+
+    /* PORTA5 (pin 55) is configured as MII0_RXER */
+    PORT_SetPinMux(PORTA, 5U, kPORT_MuxAlt4);
+
+    /* PORTA6 (pin 58) is configured as PTA6 */
+    PORT_SetPinMux(BOARD_INITPINS_OPTO_INP_0_PORT, BOARD_INITPINS_OPTO_INP_0_PIN, kPORT_MuxAsGpio);
+
+    /* PORTA7 (pin 59) is configured as PTA7 */
+    PORT_SetPinMux(BOARD_INITPINS_OPTO_INP_1_PORT, BOARD_INITPINS_OPTO_INP_1_PIN, kPORT_MuxAsGpio);
+
+    /* PORTA8 (pin 60) is configured as PTA8 */
+    PORT_SetPinMux(BOARD_INITPINS_OPTO_INP_2_PORT, BOARD_INITPINS_OPTO_INP_2_PIN, kPORT_MuxAsGpio);
+
+    /* PORTA9 (pin 61) is configured as MII0_RXD3 */
+    PORT_SetPinMux(PORTA, 9U, kPORT_MuxAlt4);
+
+    /* PORTB0 (pin 81) is configured as MII0_MDIO */
+    PORT_SetPinMux(PORTB, 0U, kPORT_MuxAlt4);
+
+    /* PORTB1 (pin 82) is configured as MII0_MDC */
+    PORT_SetPinMux(PORTB, 1U, kPORT_MuxAlt4);
+
+    /* PORTB10 (pin 91) is configured as FB_AD19 */
+    PORT_SetPinMux(PORTB, 10U, kPORT_MuxAlt5);
+
+    /* PORTB11 (pin 92) is configured as FB_AD18 */
+    PORT_SetPinMux(PORTB, 11U, kPORT_MuxAlt5);
+
+    /* PORTB16 (pin 95) is configured as FB_AD17 */
+    PORT_SetPinMux(PORTB, 16U, kPORT_MuxAlt5);
+
+    /* PORTB17 (pin 96) is configured as FB_AD16 */
+    PORT_SetPinMux(PORTB, 17U, kPORT_MuxAlt5);
+
+    /* PORTB18 (pin 97) is configured as FB_AD15 */
+    PORT_SetPinMux(PORTB, 18U, kPORT_MuxAlt5);
+
+    /* PORTB19 (pin 98) is configured as FB_OE_b */
+    PORT_SetPinMux(PORTB, 19U, kPORT_MuxAlt5);
+
+    /* PORTB2 (pin 83) is configured as I2C0_SCL */
+    PORT_SetPinMux(PORTB, 2U, kPORT_MuxAlt2);
+
+    /* PORTB20 (pin 99) is configured as FB_AD31 */
+    PORT_SetPinMux(PORTB, 20U, kPORT_MuxAlt5);
+
+    /* PORTB21 (pin 100) is configured as FB_AD30 */
+    PORT_SetPinMux(PORTB, 21U, kPORT_MuxAlt5);
+
+    /* PORTB22 (pin 101) is configured as FB_AD29 */
+    PORT_SetPinMux(PORTB, 22U, kPORT_MuxAlt5);
+
+    /* PORTB23 (pin 102) is configured as FB_AD28 */
+    PORT_SetPinMux(PORTB, 23U, kPORT_MuxAlt5);
+
+    /* PORTB3 (pin 84) is configured as I2C0_SDA */
+    PORT_SetPinMux(PORTB, 3U, kPORT_MuxAlt2);
+
+    /* PORTB4 (pin 85) is configured as PTB4 */
+    PORT_SetPinMux(BOARD_INITPINS_RS485_RE_1_PORT, BOARD_INITPINS_RS485_RE_1_PIN, kPORT_MuxAsGpio);
+
+    /* PORTB5 (pin 86) is configured as PTB5 */
+    PORT_SetPinMux(BOARD_INITPINS_RS485_DE_1_PORT, BOARD_INITPINS_RS485_DE_1_PIN, kPORT_MuxAsGpio);
+
+    /* PORTB6 (pin 87) is configured as FB_AD23 */
+    PORT_SetPinMux(PORTB, 6U, kPORT_MuxAlt5);
+
+    /* PORTB7 (pin 88) is configured as FB_AD22 */
+    PORT_SetPinMux(PORTB, 7U, kPORT_MuxAlt5);
+
+    /* PORTB8 (pin 89) is configured as FB_AD21 */
+    PORT_SetPinMux(PORTB, 8U, kPORT_MuxAlt5);
+
+    /* PORTB9 (pin 90) is configured as FB_AD20 */
+    PORT_SetPinMux(PORTB, 9U, kPORT_MuxAlt5);
+
+    /* PORTC0 (pin 103) is configured as FB_AD14 */
+    PORT_SetPinMux(PORTC, 0U, kPORT_MuxAlt5);
+
+    /* PORTC1 (pin 104) is configured as FB_AD13 */
+    PORT_SetPinMux(PORTC, 1U, kPORT_MuxAlt5);
+
+    /* PORTC10 (pin 115) is configured as FB_AD5 */
+    PORT_SetPinMux(PORTC, 10U, kPORT_MuxAlt5);
+
+    /* PORTC11 (pin 116) is configured as FB_RW_b */
+    PORT_SetPinMux(PORTC, 11U, kPORT_MuxAlt5);
+
+    /* PORTC12 (pin 117) is configured as FB_AD27 */
+    PORT_SetPinMux(PORTC, 12U, kPORT_MuxAlt5);
+
+    /* PORTC13 (pin 118) is configured as FB_AD26 */
+    PORT_SetPinMux(PORTC, 13U, kPORT_MuxAlt5);
+
+    /* PORTC14 (pin 119) is configured as FB_AD25 */
+    PORT_SetPinMux(PORTC, 14U, kPORT_MuxAlt5);
+
+    /* PORTC15 (pin 120) is configured as FB_AD24 */
+    PORT_SetPinMux(PORTC, 15U, kPORT_MuxAlt5);
+
+    /* PORTC16 (pin 123) is configured as FB_CS5_b */
+    PORT_SetPinMux(PORTC, 16U, kPORT_MuxAlt5);
+
+    /* PORTC17 (pin 124) is configured as FB_CS4_b */
+    PORT_SetPinMux(PORTC, 17U, kPORT_MuxAlt5);
+
+    /* PORTC18 (pin 125) is configured as PTC18 */
+    PORT_SetPinMux(BOARD_INITPINS_RS485_RE_2_PORT, BOARD_INITPINS_RS485_RE_2_PIN, kPORT_MuxAsGpio);
+
+    /* PORTC19 (pin 126) is configured as PTC19 */
+    PORT_SetPinMux(BOARD_INITPINS_RS485_DE_2_PORT, BOARD_INITPINS_RS485_DE_2_PIN, kPORT_MuxAsGpio);
+
+    /* PORTC2 (pin 105) is configured as FB_AD12 */
+    PORT_SetPinMux(PORTC, 2U, kPORT_MuxAlt5);
+
+    /* PORTC3 (pin 106) is configured as PTC3 */
+    PORT_SetPinMux(BOARD_INITPINS_SDHC_CD_PORT, BOARD_INITPINS_SDHC_CD_PIN, kPORT_MuxAsGpio);
+
+    /* PORTC4 (pin 109) is configured as FB_AD11 */
+    PORT_SetPinMux(PORTC, 4U, kPORT_MuxAlt5);
+
+    /* PORTC5 (pin 110) is configured as FB_AD10 */
+    PORT_SetPinMux(PORTC, 5U, kPORT_MuxAlt5);
+
+    /* PORTC6 (pin 111) is configured as FB_AD9 */
+    PORT_SetPinMux(PORTC, 6U, kPORT_MuxAlt5);
+
+    /* PORTC7 (pin 112) is configured as FB_AD8 */
+    PORT_SetPinMux(PORTC, 7U, kPORT_MuxAlt5);
+
+    /* PORTC8 (pin 113) is configured as FB_AD7 */
+    PORT_SetPinMux(PORTC, 8U, kPORT_MuxAlt5);
+
+    /* PORTC9 (pin 114) is configured as FB_AD6 */
+    PORT_SetPinMux(PORTC, 9U, kPORT_MuxAlt5);
+
+    /* PORTD0 (pin 127) is configured as PTD0 */
+    PORT_SetPinMux(BOARD_INITPINS_unused_0_PORT, BOARD_INITPINS_unused_0_PIN, kPORT_MuxAsGpio);
+
+    /* PORTD1 (pin 128) is configured as FB_CS0_b */
+    PORT_SetPinMux(PORTD, 1U, kPORT_MuxAlt5);
+
+    /* PORTD10 (pin 139) is configured as FB_A18 */
+    PORT_SetPinMux(PORTD, 10U, kPORT_MuxAlt6);
+
+    /* PORTD11 (pin 140) is configured as FB_A19 */
+    PORT_SetPinMux(PORTD, 11U, kPORT_MuxAlt6);
+
+    /* PORTD12 (pin 141) is configured as PTD12 */
+    PORT_SetPinMux(BOARD_INITPINS_LED_STATUS_R_PORT, BOARD_INITPINS_LED_STATUS_R_PIN, kPORT_MuxAsGpio);
+
+    /* PORTD13 (pin 142) is configured as PTD13 */
+    PORT_SetPinMux(BOARD_INITPINS_LED_SENSORS_PORT, BOARD_INITPINS_LED_SENSORS_PIN, kPORT_MuxAsGpio);
+
+    /* PORTD14 (pin 143) is configured as PTD14 */
+    PORT_SetPinMux(BOARD_INITPINS_LED_RS485_PORT, BOARD_INITPINS_LED_RS485_PIN, kPORT_MuxAsGpio);
+
+    /* PORTD15 (pin 144) is configured as PTD15 */
+    PORT_SetPinMux(BOARD_INITPINS_LED_STATUS_G_PORT, BOARD_INITPINS_LED_STATUS_G_PIN, kPORT_MuxAsGpio);
+
+    /* PORTD2 (pin 129) is configured as FB_AD4 */
+    PORT_SetPinMux(PORTD, 2U, kPORT_MuxAlt5);
+
+    /* PORTD3 (pin 130) is configured as FB_AD3 */
+    PORT_SetPinMux(PORTD, 3U, kPORT_MuxAlt5);
+
+    /* PORTD4 (pin 131) is configured as FB_AD2 */
+    PORT_SetPinMux(PORTD, 4U, kPORT_MuxAlt5);
+
+    /* PORTD5 (pin 132) is configured as FB_AD1 */
+    PORT_SetPinMux(PORTD, 5U, kPORT_MuxAlt5);
+
+    /* PORTD6 (pin 133) is configured as PTD6 */
+    PORT_SetPinMux(BOARD_INITPINS_BUTTON_PORT, BOARD_INITPINS_BUTTON_PIN, kPORT_MuxAsGpio);
+
+    /* PORTD7 (pin 136) is configured as PTD7 */
+    PORT_SetPinMux(BOARD_INITPINS_RELAY_PORT, BOARD_INITPINS_RELAY_PIN, kPORT_MuxAsGpio);
+
+    /* PORTD8 (pin 137) is configured as FB_A16 */
+    PORT_SetPinMux(PORTD, 8U, kPORT_MuxAlt6);
+
+    /* PORTD9 (pin 138) is configured as FB_A17 */
+    PORT_SetPinMux(PORTD, 9U, kPORT_MuxAlt6);
+
+    /* PORTE0 (pin 1) is configured as SDHC0_D1 */
+    PORT_SetPinMux(PORTE, 0U, kPORT_MuxAlt4);
+
+    /* PORTE1 (pin 2) is configured as SDHC0_D0 */
+    PORT_SetPinMux(PORTE, 1U, kPORT_MuxAlt4);
+
+    /* PORTE10 (pin 13) is configured as UART5_CTS_b */
+    PORT_SetPinMux(PORTE, 10U, kPORT_MuxAlt3);
+
+    /* PORTE11 (pin 14) is configured as UART5_RTS_b */
+    PORT_SetPinMux(PORTE, 11U, kPORT_MuxAlt3);
+
+    /* PORTE12 (pin 15) is configured as PTE12 */
+    PORT_SetPinMux(BOARD_INITPINS_RS232_SHTDWN_PORT, BOARD_INITPINS_RS232_SHTDWN_PIN, kPORT_MuxAsGpio);
+
+    /* PORTE2 (pin 3) is configured as SDHC0_DCLK */
+    PORT_SetPinMux(PORTE, 2U, kPORT_MuxAlt4);
+
+    /* PORTE24 (pin 45) is configured as UART4_TX */
+    PORT_SetPinMux(PORTE, 24U, kPORT_MuxAlt3);
+
+    /* PORTE25 (pin 46) is configured as UART4_RX */
+    PORT_SetPinMux(PORTE, 25U, kPORT_MuxAlt3);
+
+    /* PORTE26 (pin 47) is configured as PTE26 */
+    PORT_SetPinMux(BOARD_INITPINS_RS232_DTR_PORT, BOARD_INITPINS_RS232_DTR_PIN, kPORT_MuxAsGpio);
+
+    /* PORTE27 (pin 48) is configured as PTE27 */
+    PORT_SetPinMux(BOARD_INITPINS_RS232_RI_PORT, BOARD_INITPINS_RS232_RI_PIN, kPORT_MuxAsGpio);
+
+    /* PORTE28 (pin 49) is configured as PTE28 */
+    PORT_SetPinMux(BOARD_INITPINS_RS232_STATUS_PORT, BOARD_INITPINS_RS232_STATUS_PIN, kPORT_MuxAsGpio);
+
+    /* PORTE3 (pin 4) is configured as SDHC0_CMD */
+    PORT_SetPinMux(PORTE, 3U, kPORT_MuxAlt4);
+
+    /* PORTE4 (pin 7) is configured as SDHC0_D3 */
+    PORT_SetPinMux(PORTE, 4U, kPORT_MuxAlt4);
+
+    /* PORTE5 (pin 8) is configured as SDHC0_D2 */
+    PORT_SetPinMux(PORTE, 5U, kPORT_MuxAlt4);
+
+    /* PORTE6 (pin 9) is configured as PTE6 */
+    PORT_SetPinMux(BOARD_INITPINS_RS485_RE_PORT, BOARD_INITPINS_RS485_RE_PIN, kPORT_MuxAsGpio);
+
+    /* PORTE7 (pin 10) is configured as PTE7 */
+    PORT_SetPinMux(BOARD_INITPINS_RS485_DE_PORT, BOARD_INITPINS_RS485_DE_PIN, kPORT_MuxAsGpio);
+
+    /* PORTE8 (pin 11) is configured as UART5_TX */
+    PORT_SetPinMux(PORTE, 8U, kPORT_MuxAlt3);
+
+    /* PORTE9 (pin 12) is configured as UART5_RX */
+    PORT_SetPinMux(PORTE, 9U, kPORT_MuxAlt3);
+
+    SIM->SOPT5 = ((SIM->SOPT5 &
+                   /* Mask bits to zero which are setting */
+                   (~(SIM_SOPT5_UART0TXSRC_MASK)))
+
+                  /* UART 0 transmit data source select: UART0_TX pin. */
+                  | SIM_SOPT5_UART0TXSRC(SOPT5_UART0TXSRC_UART_TX));
+}
+
 void NutBoardInit(void)
 {
 	flexbus_config_t fb_config;
@@ -321,8 +804,11 @@ void NutBoardInit(void)
 	/* Port E Clock Gate Control: Clock enabled */
 	CLOCK_EnableClock(kCLOCK_PortE);
 
-	NutBoardInitGpio();
-	NutBoardInitPinMux();
+	BOARD_InitPins();
+	/*
+		NutBoardInitGpio();
+		NutBoardInitPinMux();
+		*/
 /* fbConfig->chip                   = 0;
    fbConfig->writeProtect           = 0;
    fbConfig->burstWrite             = 0;

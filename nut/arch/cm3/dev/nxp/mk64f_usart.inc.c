@@ -188,7 +188,10 @@ static void Mk64fUsartTxReady(void *arg)
 		 * Start transmission of the next character and clear TXRDY bit
 		 * in USR register.
 		 */
-		UART_WriteByte(MK64F_USART_BASE, *cp);
+		if (MK64F_USART_BASE == UART0)
+			UART_WriteByte(UART0, *cp);
+		else
+			UART_WriteByte(MK64F_USART_BASE, *cp);
 		/*
 		 * Wrap around the buffer pointer if we reached its end.
 		 */
@@ -323,7 +326,7 @@ static void Mk64fUsartRxComplete(void *arg)
 		}
 		/* Update the ring buffer counter. */
 		rbf->rbf_cnt = cnt;
-	} while (kUART_RxFifoEmptyFlag & UART_GetStatusFlags(MK64F_USART_BASE)); // byte in buffer?
+	} while (!(kUART_RxFifoEmptyFlag & UART_GetStatusFlags(MK64F_USART_BASE))); // byte in buffer?
 
 	// Eventually post event to wake thread
 	if (postEvent)
@@ -445,7 +448,7 @@ static int Mk64fUsartInit(void)
 #ifdef UART_HDB_FDX_BIT
 	/* YZ disabled */
 	/* RE2 = 1 Disable Receiver, DE2 = 0 Disable Transmitter*/
-	GPIO_PinWrite(MK64F_USART_GPIO_RE2, MK64F_USART_PIN_RE2, 0);
+	GPIO_PinWrite(MK64F_USART_GPIO_RE2, MK64F_USART_PIN_RE2, 1);
 	GPIO_PinWrite(MK64F_USART_GPIO_DE2, MK64F_USART_PIN_DE2, 0);
 #endif
 
@@ -511,7 +514,7 @@ static void Mk64fUsartTxStart(void)
 		{
 			/* Enable xmitter on YZ */
 			/* RE2 = 1 Disable Receiver, DE2 = 1 Enable Transmitter */
-			GPIO_PinWrite(MK64F_USART_GPIO_DE2, MK64F_USART_PIN_RE2, 1);
+			GPIO_PinWrite(MK64F_USART_GPIO_RE2, MK64F_USART_PIN_RE2, 1);
 			GPIO_PinWrite(MK64F_USART_GPIO_DE2, MK64F_USART_PIN_DE2, 1);
 		}
 		else
@@ -519,11 +522,12 @@ static void Mk64fUsartTxStart(void)
 		{
 			/* Enable xmitter on AB */
 			/* RE1 = 1 Disable Receiver, DE1 = 1 Enable Transmitter */
-			GPIO_PinWrite(MK64F_USART_GPIO_DE1, MK64F_USART_PIN_RE1, 1);
+			GPIO_PinWrite(MK64F_USART_GPIO_RE1, MK64F_USART_PIN_RE1, 1);
 			GPIO_PinWrite(MK64F_USART_GPIO_DE1, MK64F_USART_PIN_DE1, 1);
 		}
 	}
 #endif
+
 	/* Enable Transmitter Ready Interrupt */
 	SET_TXRDY_INTERRUPT();
 }
@@ -860,6 +864,7 @@ static int Mk64fUsartSetParity(uint8_t mode)
 		break;
 	case 0:
 		parityMode = kUART_ParityDisabled;
+		break;
 	default:
 		return -1;
 	}

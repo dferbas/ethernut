@@ -828,7 +828,9 @@ int UsartIOCtl(NUTDEVICE * dev, int req, void *conf)
         break;
 
     case UART_SETFLOWCONTROL:
-        lv = dcb->dcb_modeflags;
+        if (!lv) {
+          lv = dcb->dcb_modeflags;
+        }
         rc = (dcb->dcb_set_flow_control) (lv);
         if (rc == 0) {
             dcb->dcb_modeflags = lv;
