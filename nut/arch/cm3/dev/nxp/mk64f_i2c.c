@@ -179,7 +179,7 @@ int TwiMasterLow(NUTTWIBUS *bus, uint8_t sla, uint32_t iadr
 	NUTTWIICB *icb = bus->bus_icb;
 
 	/* Quit if nothing to do */
-	if ((txlen == 0) && (rxsiz == 0)) {
+	if ((txlen == 0) && (iadrlen == 0) && (rxsiz == 0)) {
 		return 0;
 	}
 

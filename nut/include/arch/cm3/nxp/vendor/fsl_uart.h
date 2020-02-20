@@ -563,9 +563,6 @@ static inline void UART_EnableRx(UART_Type *base, bool enable)
  */
 static inline void UART_WriteByte(UART_Type *base, uint8_t data)
 {
-	if (base == UART0) {
-		dummy_debug('U', 'U');
-	}
     base->D = data;
 }
 
