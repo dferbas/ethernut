@@ -138,7 +138,7 @@ static uint32_t m_baud_rate;
 
 
 
-static void Mk64fUsartTxReady(void *arg)
+static int Mk64fUsartTxReady(void *arg)
 {
 	register RINGBUF *rbf = (RINGBUF *) arg;
 
@@ -188,7 +188,7 @@ static void Mk64fUsartTxReady(void *arg)
 		 * Start transmission of the next character and clear TXRDY bit
 		 * in USR register.
 		 */
-		if (MK64F_USART_BASE == UART0)
+		if (MK64F_USART_BASE == UART0 && *cp == '}')
 			UART_WriteByte(UART0, *cp);
 		else
 			UART_WriteByte(MK64F_USART_BASE, *cp);
@@ -203,6 +203,11 @@ static void Mk64fUsartTxReady(void *arg)
 		if (rbf->rbf_cnt == rbf->rbf_lwm)
 		{
 			postEvent = 1;
+		}
+		if (!rbf->rbf_cnt) {
+			while (!(kUART_TransmissionCompleteFlag & UART_GetStatusFlags(MK64F_USART_BASE))){
+			}
+			return 1;
 		}
 	}
 
@@ -222,6 +227,7 @@ static void Mk64fUsartTxReady(void *arg)
 #ifdef NUTTRACER
 	TRACE_ADD_ITEM(TRACE_TAG_INTERRUPT_EXIT,TRACE_INT_UART_TXEMPTY);
 #endif
+	return 0;
 }
 
 
@@ -388,7 +394,8 @@ static void Mk64fUsartInterrupts(void *arg)
 
 	if (kUART_TxDataRegEmptyFlag & UART_GetStatusFlags(MK64F_USART_BASE))
 	{
-		Mk64fUsartTxReady(&p_dcb->dcb_tx_rbf);
+		if (Mk64fUsartTxReady(&p_dcb->dcb_tx_rbf))
+			return;
 	}
 
 #if defined(UART_HDX_BIT) || defined(UART_HDB_FDX_BIT)
