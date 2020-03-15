@@ -128,7 +128,7 @@ static ureg_t cts_sense;
 
 static uint32_t m_parity;
 static uint32_t m_stop_bits;
-static uint32_t m_baud_rate;
+static uint32_t m_baud_rate = MK64F_USART_BAUDRATE;
 /*!
  * \addtogroup xgMcf5225
  */
@@ -188,10 +188,13 @@ static int Mk64fUsartTxReady(void *arg)
 		 * Start transmission of the next character and clear TXRDY bit
 		 * in USR register.
 		 */
-		if (MK64F_USART_BASE == UART0 && *cp == '}')
+		if (MK64F_USART_BASE == UART0)
 			UART_WriteByte(UART0, *cp);
 		else
 			UART_WriteByte(MK64F_USART_BASE, *cp);
+
+		while (!(kUART_TransmissionCompleteFlag & UART_GetStatusFlags(MK64F_USART_BASE))){
+		}
 		/*
 		 * Wrap around the buffer pointer if we reached its end.
 		 */
@@ -204,11 +207,11 @@ static int Mk64fUsartTxReady(void *arg)
 		{
 			postEvent = 1;
 		}
+		/*
 		if (!rbf->rbf_cnt) {
-			while (!(kUART_TransmissionCompleteFlag & UART_GetStatusFlags(MK64F_USART_BASE))){
-			}
 			return 1;
 		}
+		*/
 	}
 
 	if (rbf->rbf_cnt == 0) {
@@ -360,7 +363,7 @@ static void Mk64fUsartTxEmpty(void *arg)
 {
 	/* Last byte from shift register was sent. */
 
-#if (((PLATFORM_SUB == REV_D) || (PLATFORM_SUB == REV_F)) && defined(UART_HDB_FDX_BIT))
+#if (defined(UART_HDB_FDX_BIT))
 	if ((hdx_control & HDX_CONTROL_MASK) & HDX_CONTROL_HALFDUPLEX_YZ)
 	{
 		/* Set Half duplex on second chip*/
@@ -813,7 +816,14 @@ static int Mk64fUsartSetSpeed(uint32_t rate)
 	status_t status;
 	uint32_t srcClock_Hz = NutGetCpuClock();
 
-	status = UART_SetBaudRate(MK64F_USART_BASE, rate, srcClock_Hz);
+	if (m_baud_rate == rate)
+		return 0;
+
+	if (MK64F_USART_BASE == UART0) {
+		status = UART_SetBaudRate(UART0, rate, srcClock_Hz);
+	} else {
+		status = UART_SetBaudRate(MK64F_USART_BASE, rate, srcClock_Hz);
+	}
 
 	if (status != kStatus_Success)
 		return -1;
