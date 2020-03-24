@@ -1,6 +1,8 @@
 #include <arch/cm3/nxp/vendor/MK64F12.h>
 
-__attribute__ ((used,section(".FlashConfig"))) const struct {
+//__attribute__ ((used,section(".FlashConfig")))
+__attribute__ ((section (".text.ro.cfm.data"), used, weak))
+const struct {
     unsigned int word1;
     unsigned int word2;
     unsigned int word3;

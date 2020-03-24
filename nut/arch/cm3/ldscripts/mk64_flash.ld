@@ -57,13 +57,11 @@ SECTIONS{
         KEEP(*(.isr_vector))
         _evect = .;
 
-        /* Kinetis Flash Configuration data */
-        . = 0x400 ;
-        PROVIDE(__FLASH_CONFIG_START__ = .) ;
-        KEEP(*(.FlashConfig))
-        PROVIDE(__FLASH_CONFIG_END__ = .) ;
-        ASSERT(!(__FLASH_CONFIG_START__ == __FLASH_CONFIG_END__), "Linker Flash Config Support Enabled, but no .FlashConfig section provided within application");
-        /* End of Kinetis Flash Configuration data */
+        /* TODO - check if unoccupied
+		 * Bootloader production data should start here [0x300],
+         * beyond which production data for application starts.
+         */
+INCLUDE production_data.ld
         
         *(.nutinit)
         *(.text .text.* .gnu.linkonce.t.*)
