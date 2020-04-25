@@ -20,5 +20,6 @@ extern IRQ_HANDLER sig_I2C0;     // I2C 0 event
 extern IRQ_HANDLER sig_USART0;     // I2C 0 event
 extern IRQ_HANDLER sig_USART4;     // I2C 0 event
 extern IRQ_HANDLER sig_USART5;     // I2C 0 event
+extern IRQ_HANDLER sig_RTC;     // I2C 0 event
 
 #endif /* !MK64F_IRQREG_H */

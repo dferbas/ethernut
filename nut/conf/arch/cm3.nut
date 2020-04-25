@@ -270,6 +270,7 @@ nutarch_cm3 =
             "cm3/dev/nxp/mk64f_usart0.c",
             "cm3/dev/nxp/mk64f_usart1.c",
             "cm3/dev/nxp/mk64f_usart2.c",
+            "cm3/dev/nxp/mk64f_rtc.c",
             "cm3/dev/nxp/system_mk64f.c",
             "cm3/dev/nxp/eth_mcux.c",
             "cm3/dev/nxp/vendor/fsl_clock.c",

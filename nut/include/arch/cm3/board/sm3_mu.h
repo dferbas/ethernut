@@ -37,6 +37,12 @@
 #define NUTUART2 DEV_UART2
 #endif
 
+
+#ifndef RTC_CHIP
+#include <dev/mk64f_rtc.h>
+#define RTC_CHIP rtcMk64f
+#endif
+
 #define BOARD_SDHC_BASEADDR SDHC
 #define BOARD_SDHC_CLK_FREQ CLOCK_GetFreq(kCLOCK_CoreSysClk)
 #define BOARD_SDHC_CD_GPIO_BASE GPIOC
