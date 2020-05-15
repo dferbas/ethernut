@@ -137,6 +137,10 @@ static int    tcp_run_gc = 0;
 
 static void NutTcpStateProcess(TCPSOCKET * sock, NETBUF * nb);
 
+typedef void (*TMWDTResetFN)(void);
+
+static TMWDTResetFN	TCPMWDTResetFN = NULL;
+
 /* ================================================================
  * Helper functions
  * ================================================================
@@ -1748,6 +1752,11 @@ THREAD(NutTcpSm, arg)
         if (++tac > 3 || NutEventWait(&tcp_in_rdy, 200)) {
             tac = 0;
 
+            /* Reset watchdog, if reset function is not null.*/
+            if (TCPMWDTResetFN != NULL) {
+              TCPMWDTResetFN();
+            }
+
 #if TCP_BACKLOG_MAX
             /* Process backlog timer.
              *
@@ -1950,6 +1959,11 @@ int NutTcpAbortSocket(TCPSOCKET * sock, uint16_t last_error)
         NutSelectWakeup(sock->so_tx_wq_list, WQ_FLAG_WRITE);
     }
     return 0;
+}
+
+void NutTcpMWDTSetResetFN(TMWDTResetFN ResetFN)
+{
+	TCPMWDTResetFN = ResetFN;
 }
 
 /*@}*/

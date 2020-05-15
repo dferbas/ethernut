@@ -156,6 +156,15 @@ extern void NutAppMain(void *arg) __attribute__ ((noreturn));
 extern void main(void *);
 #endif
 
+
+typedef void (*TMWDTResetFN)(void);
+static TMWDTResetFN IdleMWDTResetFN = NULL;
+
+void IdleMWDTSetResetFN(TMWDTResetFN ResetFN)
+{
+	IdleMWDTResetFN = ResetFN;
+}
+
 static NutIdleCallback IdleCall;
 NutIdleCallback NutRegisterIdleCallback(NutIdleCallback func)
 {
@@ -220,6 +229,9 @@ THREAD(ATTRIBUTE_NUTINIT_SECTION NutIdle, arg)
     NutThreadSetPriority(254);
     for (;;) {
         /* Check if other threads became ready to run. */
+    		if (IdleMWDTResetFN != NULL) {
+          IdleMWDTResetFN();
+        }
         NutThreadYield();
         /* Remove terminated threads. */
         NutThreadDestroy();
