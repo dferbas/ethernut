@@ -70,6 +70,8 @@
 #define NUT_THREAD_PPPSMSTACK   512
 #endif
 
+
+#define PPP_SM_PERIOD		2000	//3000 unreliable, 5000 often unable to connect with O2 operator
 /*!
  * \addtogroup xgPPP
  */
@@ -78,6 +80,11 @@
 uint32_t new_magic = 0x12345678;
 static HANDLE pppThread;
 
+/*
+ * Echo request/reply declarations
+ */
+static int echo_enable = 0;
+static int echo_timeout = 0;
 
 /*! \fn NutPppSm(void *arg)
  * \brief PPP state machine timeout thread.
@@ -88,7 +95,8 @@ THREAD(NutPppSm, arg)
 {
     NUTDEVICE *dev = arg;
     PPPDCB *dcb = dev->dev_dcb;
-    uint_fast8_t retries;
+    uint_fast8_t retries, lcp_echo_counter = 0;
+    int echo_test = 0;
 
     for (;;) {
         NutSleep(5000);
@@ -157,6 +165,22 @@ THREAD(NutPppSm, arg)
             } else
                 dcb->dcb_ipcp_state = PPPS_STOPPED;
             break;
+        case PPPS_OPENED:
+            if (echo_enable) {
+                if (echo_test) {
+                    if (dcb->dcb_echo_req_pending) {
+                        LcpClose(dev);		// close ppp connection
+                        echo_timeout = 1;	// timeout occurred
+                    } else {
+                        echo_timeout = 0;	// echo reply received
+                    }
+                    echo_test = 0;
+                } else if (++lcp_echo_counter >= echo_enable) {
+                    lcp_echo_counter = 0;
+                    echo_test = LcpTxEchoReq(dev);	// echo_test = 1 if packet was sent
+                }
+            }
+            break;
         }
     }
 }
@@ -178,6 +202,32 @@ int NutPppInitStateMachine(NUTDEVICE * dev)
     }
     return 0;
 }
+
+/*!
+ * \brief enable/disable LCP echo sending.
+ *
+ */
+void SetLcpEchoEnable(int period)
+{
+  echo_enable = period / (PPP_SM_PERIOD / 1000);
+}
+
+/*!
+ * \brief get LCP echo timeout state.
+ *
+ */
+int GetLcpEchoState(void)
+{
+#if 0
+  int rc = echo_timeout;
+  echo_timeout = 0;
+
+  return rc;
+#else
+  return echo_timeout;
+#endif
+}
+
 
 /*!
  * \brief Trigger LCP open event.

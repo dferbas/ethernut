@@ -521,6 +521,8 @@
  */
 #define UART_SETHDPXMODE        0x0130
 
+
+
 /*! \brief UART _ioctl() command code to query the halfduplex mode.
  *
  * The configuration parameter must be a pointer to a uint32_t variable,
@@ -565,6 +567,14 @@
  * \ref UART_SETSTATUS and \ref UART_GETSTATUS.
  */
 /*@{*/
+
+
+/*! \brief UART _ioctl() command code to query the halfduplex mode.
+ *
+ *
+ * See also \ref HDLC_GETSTATE.
+ */
+#define HDLC_GETSTATE			0x0134
 
 /*! \brief Framing error.
  *

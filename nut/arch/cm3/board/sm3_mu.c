@@ -138,13 +138,10 @@ static void NutBoardInitPinMux(void)
 	PORT_SetPinMux(PORTE, 26U, kPORT_MuxAsGpio);
 	PORT_SetPinMux(PORTE, 27U, kPORT_MuxAsGpio);
 
-
-
 		/* Initialize GPIO functionality on pin PTD12 (pin 141)  */
 
 	PORT_SetPinMux(PORTC, PIN6_IDX, kPORT_MuxAsGpio);
 	PORT_SetPinMux(PORTC, PIN13_IDX, kPORT_MuxAsGpio);
-
 
 	PORT_SetPinMux(PORTA, PIN4_IDX, kPORT_MuxAsGpio);            /* PORTA5 (pin 39) is configured as PHY_RESET */
 	PORT_SetPinMux(PORTA, PIN5_IDX, kPORT_MuxAlt4);            /* PORTA5 (pin 39) is configured as MII0_RXER */
@@ -1294,4 +1291,29 @@ void oldPinInit(void){
  **********************************************************************************************************************/
 
 
+/*
+ * Application API
+ */
+void SetDtrState(int state)
+{
+	/*
+	 * For control signals (ie. RTS, CTS, DTR, DSR, ...):
+	 *  logical 0: -3 V .. -15 V
+	 *  logical 1: +3 V .. +15 V.
+	 * DTE signals its ready state with logical 1 on this pin.
+	 * We set log. 0 for DTR by setting the pin to log. 1.
+	 */
 
+	// GpioPinSet(HBUS232_DTR_OUT_PORT, HBUS232_DTR_OUT_PIN, 1 - state);
+
+	GPIO_PinWrite(GPIOE, PIN26_IDX, 1 - state);
+}
+
+EPiggyBackState GetPiggyBackState(void)
+{
+//	if (GpioPinGet(PIGGYBACK232_IN_PORT, PIGGYBACK232_IN_PIN))
+	if (GPIO_PinRead(GPIOE, PIN27_IDX))
+		return pbsYZ_FULL_DUP_485;
+
+	return pbsYZ_FULL_DUP_232;
+}

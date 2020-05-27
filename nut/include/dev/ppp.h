@@ -140,6 +140,18 @@ struct _PPPSERVER_CFG {
 typedef struct _PPPDCB PPPDCB;
 
 /*!
+ * \brief PPP callback functionality.
+ */
+typedef int (PppCallbackT) (PPPDCB *, uint8_t);
+
+#define PPP_EVENT_HDLC_UP	0
+#define PPP_EVENT_HDLC_DOWN	1
+#define PPP_EVENT_IPCP_UP	2
+#define PPP_EVENT_IPCP_DOWN	3
+
+
+
+/*!
  * \struct _PPPDCB ppp.h dev/ppp.h
  * \brief PPP interface structure.
  *
@@ -151,6 +163,16 @@ struct _PPPDCB {
      * network interface becomes ready.
      */
     HANDLE dcb_state_chg;
+
+    /*! \brief PPP callback function
+     *
+     */
+    PppCallbackT *dcb_callback;
+
+    /*! \brief Echo flag
+     * Set when echo request is sent, cleared when reply is received and checked by PPP sm.
+     */
+    uint8_t dcb_echo_req_pending;
 
     /*! \brief Current state of the link layer.
      */
@@ -274,6 +296,9 @@ extern NUTDEVICE devPpp;
 #define LCP_CLOSE       2
 #define LCP_LOWERUP     3
 #define LCP_LOWERDOWN   4
+#define PPP_SETCALLBACK  	5
+#define LCP_SETECHOSTATE  	6
+#define LCP_GETECHOSTATE  	7
 
 /*@}*/
 

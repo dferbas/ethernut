@@ -52,6 +52,7 @@
 #include <netinet/if_ppp.h>
 #include <netinet/ppp_fsm.h>
 #include <net/ppp.h>
+#include <net/netdebug.h>
 #include <dev/usart.h>
 #include <io.h>
 
@@ -113,6 +114,47 @@ static INLINE void LcpResetOptions(NUTDEVICE * dev)
     dcb->dcb_loc_mru = 1500;
 
     _ioctl(dcb->dcb_fd, HDLC_SETTXACCM, &dcb->dcb_accm );
+}
+
+/*!
+ * \brief Send LCP echo request.
+ *
+ * Used to periodically check PPP connection even if theere is no NCP traffic.
+ *
+ * \param dev Pointer to the NUTDEVICE structure of the PPP device.
+ *
+ */
+int LcpTxEchoReq(NUTDEVICE * dev)
+{
+    PPPDCB *dcb = dev->dev_dcb;
+    NETBUF *nb;
+    int nb_len;
+    int rslt = 0;
+
+#ifdef NUTDEBUG
+    if (__ppp_trf) {
+        fputs("\n[LCP-ERQ]", __ppp_trs);
+    }
+#endif
+
+    if (dcb->dcb_lcp_state == PPPS_OPENED)
+    {
+    	nb_len = sizeof(uint32_t);
+    	nb = NutNetBufAlloc(NULL, NBAF_APPLICATION, nb_len);
+
+    	/* Use local magic number. */
+    	uint32_t *p_data = (uint32_t *)nb->nb_ap.vp;
+    	*p_data = htonl(dcb->dcb_neg_magic);
+        //memcpy(nb->nb_ap.vp, &dcb->dcb_neg_magic, nb_len);
+    	NutLcpOutput(dev, LCP_ERQ, ++dcb->dcb_reqid, nb);
+
+        /* flag will be set to 0 when echo reply is received */
+    	dcb->dcb_echo_req_pending = 1;
+
+    	rslt = 1;
+    }
+
+    return rslt;
 }
 
 /*

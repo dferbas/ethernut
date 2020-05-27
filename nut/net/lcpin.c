@@ -522,7 +522,21 @@ static INLINE void LcpRxEchoReq(NUTDEVICE * dev, uint8_t id, NETBUF * nb)
     }
 }
 
+/*!
+ * \brief Received an Echo-Reply.
+ */
+static INLINE void LcpRxEchoReply(NUTDEVICE * dev, uint8_t id, NETBUF * nb)
+{
+    PPPDCB *dcb = dev->dev_dcb;
 
+    NutNetBufFree(nb);
+
+    if (dcb->dcb_echo_req_pending && id == dcb->dcb_reqid)
+    {
+    	dcb->dcb_echo_req_pending = 0;
+    	PppSmProcessImmediately(dcb);		//invoke ppp_sm to immediately reflect reply
+    }
+}
 
 /*!
  * \brief Handle incoming LCP packets.

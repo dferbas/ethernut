@@ -206,6 +206,18 @@ static int NutPppIOCtl(NUTDEVICE * dev, int req, void *conf)
         LcpLowerDown(dev);
         break;
 
+    case PPP_SETCALLBACK:
+    	((PPPDCB *)(dev->dev_dcb))->dcb_callback = (PppCallbackT *)conf;
+		break;
+
+    case LCP_SETECHOSTATE:
+    	SetLcpEchoEnable(*((int *)conf));
+        break;
+
+    case LCP_GETECHOSTATE:
+    	*((int *)conf) = GetLcpEchoState();
+        break;
+
     default:
         rc = _ioctl(((PPPDCB *) (dev->dev_dcb))->dcb_fd, req, conf);
         break;

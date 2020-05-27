@@ -75,6 +75,12 @@
  */
 #define IN_ACC_MAP(c, m) (( ((uint8_t) (c)) < 0x20)  && ((m) & (1UL << (c))) != 0)
 
+/* Message NO CARRIER detection - definition */
+#define NO_CARRIER_START 'N'
+static const char nc[] = "NO CARRIER";
+static const int NO_CARRIER_LEN = sizeof(nc) - 1;
+static uint32_t hdlc_state_flag = 0;
+
 /*
  * FCS lookup table.
  */
@@ -259,6 +265,7 @@ THREAD(PppHdlcReceive, arg)
     uint_fast8_t inframe = 0;
     uint_fast8_t escaped = 0;
     uint32_t tmo = 1000;
+    hdlc_state_flag = 1;
 
     rd_buf = malloc(rd_siz);
     rd_ptr = rd_buf;
@@ -349,6 +356,8 @@ THREAD(PppHdlcReceive, arg)
     dev->dev_type = IFTYP_CHAR;
     NutEventPost(&dcb->dcb_mode_evt);
 
+    hdlc_state_flag = 0;
+
     NutThreadExit();
     for (;;);
 }
@@ -418,6 +427,10 @@ static int PppHdlcIoCtl(NUTDEVICE *dev, int req, void *conf)
         break;
     case HDLC_GETTXACCM:
         *((uint32_t *) conf) = dcb->dcb_tx_accm;
+        break;
+
+    case HDLC_GETSTATE:
+        *((uint32_t *)conf) = hdlc_state_flag;
         break;
 
     default:
